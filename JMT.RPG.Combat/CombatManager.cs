@@ -8,16 +8,16 @@ namespace JMT.RPG.Combat
 {
     public class CombatManager
     {
-        private IEnumerable<Combatant> _playerParty;
-        private IEnumerable<Combatant> _enemyParty;
-        private IEnumerable<Combatant> _combatants { 
+        private IEnumerable<ICombatant> _playerParty;
+        private IEnumerable<ICombatant> _enemyParty;
+        private IEnumerable<ICombatant> _combatants { 
             get
             {
                 return _playerParty.Concat(_enemyParty);
             }
         }
 
-        public CombatManager(IEnumerable<Combatant> playerParty, IEnumerable<Combatant> enemyParty)
+        public CombatManager(IEnumerable<ICombatant> playerParty, IEnumerable<ICombatant> enemyParty)
         {
             _playerParty = playerParty;
             _enemyParty = enemyParty;
@@ -33,7 +33,7 @@ namespace JMT.RPG.Combat
                 // start of turn phase
                 StartOfTurnPhase();
 
-                Combatant[] speedSortedCombatants = _combatants.OrderByDescending(c => c.Speed).ToArray();
+                ICombatant[] speedSortedCombatants = _combatants.OrderByDescending(c => c.Speed).ToArray();
 
                 // each combatant takes their turn selecting and applying their action
                 foreach (Combatant combatant in speedSortedCombatants)
