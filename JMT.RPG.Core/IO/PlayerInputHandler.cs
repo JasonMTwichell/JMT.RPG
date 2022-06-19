@@ -1,7 +1,7 @@
-﻿using JMT.Roguelike.Core.Coordination;
+﻿using JMT.RPG.Core.Coordination;
 using System.Reactive.Linq;
 
-namespace JMT.Roguelike.Core.IO
+namespace JMT.RPG.Core.IO
 {
     internal class PlayerInputHandler
     {

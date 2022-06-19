@@ -1,30 +1,36 @@
-﻿using JMT.Roguelike.Core.Coordination;
+﻿using JMT.RPG.Core.Coordination;
+using JMT.RPG.Combat;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace JMT.Roguelike.Combat
+namespace JMT.RPG.Combat
 {
     public class Combatant
     {
-        public string Id { get; set; }
-        public string Name { get; set; }
-        public int Level { get; set; }
+        #region Stats
+        public string Id { get; init; }
+        public string Name { get; init; }
+        public int Level { get; init; }
         public int TotalHealth { get; set; }
         public int RemainingHealth { get; set; }
         public int Intellect { get; set; }
         public int Strength { get; set; }
-        public int Speed { get; set; }
-        public IEnumerable<CombatAbility> CombatAbilities { get; set; }
+        public int Speed { get; set; }        
+        #endregion
+
         private IInputHandler _inputHandler;
+        private ICombatAbilityManager _combatAbilityManager;
         private List<ResolvedEffect> _queuedEffects { get; set; }
         private List<ResolvedEffect> _forwardEffects { get; set; }
 
-        public Combatant(IInputHandler inputHandler)
+        public Combatant(IInputHandler inputHandler, ICombatAbilityManager combatAbilityManager)
         {
             _inputHandler = inputHandler;
+            _combatAbilityManager = combatAbilityManager;
+
             _queuedEffects = new List<ResolvedEffect>();
             _forwardEffects = new List<ResolvedEffect>();
         }
@@ -35,39 +41,22 @@ namespace JMT.Roguelike.Combat
             {
                 TurnNumber = combatState.TurnNumber,
                 CombatantStates = combatState.CombatantStates,
-                CombatantAbilities = CombatAbilities.ToArray(),
+                CombatantAbilities = _combatAbilityManager.GetCombatAbilities().ToArray(),
             };
 
             InputResult input = await _inputHandler.GetInput(context);
-            CombatAbility chosenAbility = CombatAbilities.First(ca => ca.CombatAbilityId == input.ChosenAbilityId);
-            ResolvedEffect[] resolvedEffects = ResolveCombatAbility(chosenAbility, input.TargetId).ToArray();
-            return resolvedEffects;
-        }
-        
-        private IEnumerable<ResolvedEffect> ResolveCombatAbility(CombatAbility ability, string targetId)
-        {
-            // set cooldown
-            ability.RemainingCooldown = ability.Cooldown;
 
-            // apply stats and armor influence to effects
-            foreach(CombatEffect combatEffect in ability.Effects)
+            CombatAbilityResolutionContext resCtx = new CombatAbilityResolutionContext()
             {
-                yield return BuildResolvedEffect(combatEffect, targetId);
-            }
-        }
-
-        private ResolvedEffect BuildResolvedEffect(CombatEffect combatEffect, string targetId)
-        {
-            int resolvedMagnitude = ResolveCombatEffectMagnitude(combatEffect.Magnitude, combatEffect.EffectType) * combatEffect.MagnitudeFactor;
-            ResolvedEffect resolvedEffect = new ResolvedEffect()
-            {
-                TargetID = targetId,
-                EffectedAttribute = combatEffect.EffectedAttribute,
-                ResolvedMagnitude = resolvedMagnitude,
-                ForwardEffect = combatEffect.ForwardEffect != null ? BuildResolvedEffect(combatEffect.ForwardEffect, targetId) : null,
+                CombatAbilityID = input.ChosenAbilityId,
+                TargetId = input.TargetId,
+                Strength = Strength,
+                Intellect = Intellect,
+                Speed = Speed,
             };
 
-            return resolvedEffect;
+            ResolvedEffect[] resolvedEffects = _combatAbilityManager.ResolveCombatAbility(resCtx).ToArray();
+            return resolvedEffects;
         }
 
         internal void StartOfTurn()
@@ -81,24 +70,6 @@ namespace JMT.Roguelike.Combat
             // move forward effects to effect queue
             _queuedEffects.AddRange(_forwardEffects);
             _forwardEffects.Clear();
-        }
-
-        private int ResolveCombatEffectMagnitude(int defaultMagnitude, string abilityType)
-        {
-            switch(abilityType)
-            {
-                case EffectType.PHYSICAL:
-                    defaultMagnitude += Strength;
-                    break;
-                case EffectType.MAGICAL:
-                    defaultMagnitude += Intellect;
-                    break;
-                case EffectType.AGILITY:
-                    defaultMagnitude += Speed;
-                    break;
-            }
-
-            return defaultMagnitude;
         }
 
         public void ApplyEffects(ResolvedEffect[] targetingEffects)
@@ -124,16 +95,16 @@ namespace JMT.Roguelike.Combat
         {
             switch(effect.EffectedAttribute)
             {
-                case Attribute.HEALTH:
+                case EffectedAttribute.HEALTH:
                     RemainingHealth += effect.ResolvedMagnitude;
                     break;
-                case Attribute.INTELLECT:
+                case EffectedAttribute.INTELLECT:
                     Intellect += effect.ResolvedMagnitude;
                     break;
-                case Attribute.STRENGTH:
+                case EffectedAttribute.STRENGTH:
                     Strength += effect.ResolvedMagnitude;
                     break;
-                case Attribute.SPEED:
+                case EffectedAttribute.SPEED:
                     Speed += effect.ResolvedMagnitude;
                     break;                
             }
@@ -151,7 +122,7 @@ namespace JMT.Roguelike.Combat
                 Intellect = Intellect,
                 Speed = Speed,
                 Strength = Strength,
-                CombatAbilities = CombatAbilities.ToArray(),
+                CombatAbilities = _combatAbilityManager.GetCombatAbilities().ToArray(),
             };
 
             return combatantState;

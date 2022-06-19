@@ -1,4 +1,4 @@
-﻿namespace JMT.Roguelike.Core.Coordination
+﻿namespace JMT.RPG.Core.Coordination
 {
     public interface IGameEvent
     {

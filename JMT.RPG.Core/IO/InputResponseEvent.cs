@@ -1,11 +1,11 @@
-﻿using JMT.Roguelike.Core.Coordination;
+﻿using JMT.RPG.Core.Coordination;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace JMT.Roguelike.Core.IO
+namespace JMT.RPG.Core.IO
 {
     internal class InputResponseEvent : GameEvent
     {

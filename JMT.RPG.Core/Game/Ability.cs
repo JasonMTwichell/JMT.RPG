@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace JMT.Roguelike.Core.Game
+namespace JMT.RPG.Core.Game
 {
     public class Ability
     {

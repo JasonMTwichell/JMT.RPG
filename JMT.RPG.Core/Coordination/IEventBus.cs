@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace JMT.Roguelike.Core.Coordination
+namespace JMT.RPG.Core.Coordination
 {
     public interface IEventBus
     {

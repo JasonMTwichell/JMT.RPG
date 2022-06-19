@@ -1,4 +1,4 @@
-﻿namespace JMT.Roguelike.Core.Game
+﻿namespace JMT.RPG.Core.Game
 {
     public class Character
     {

@@ -1,4 +1,4 @@
-﻿namespace JMT.Roguelike.Combat
+﻿namespace JMT.RPG.Combat
 {
     public record CombatState
     {

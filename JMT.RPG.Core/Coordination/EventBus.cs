@@ -1,7 +1,7 @@
 ﻿using System.Reactive.Linq;
 using System.Reactive.Subjects;
 
-namespace JMT.Roguelike.Core.Coordination
+namespace JMT.RPG.Core.Coordination
 {
     public class EventBus : IEventBus
     {
