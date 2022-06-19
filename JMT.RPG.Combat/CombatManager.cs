@@ -34,10 +34,12 @@ namespace JMT.RPG.Combat
                 StartOfTurnPhase();
 
                 Combatant[] speedSortedCombatants = _combatants.OrderByDescending(c => c.Speed).ToArray();
+
+                // each combatant takes their turn selecting and applying their action
                 foreach (Combatant combatant in speedSortedCombatants)
                 {
                     // effects after being run through bonuses and triggers
-                    CombatState combatState = GetCombatState(turnNumber);
+                    CombatContext combatState = GetCombatContext(turnNumber);
                     IEnumerable<ResolvedEffect> resolvedEffects = await combatant.ChooseCombatAbility(combatState);
 
                     // distribute them to their targets
@@ -45,8 +47,9 @@ namespace JMT.RPG.Combat
                     {
                         ResolvedEffect[] targetingEffects = resolvedEffects.ToArray().Where(e => e.TargetID == targetedCombatant.Id).ToArray();
                         targetedCombatant.ApplyEffects(targetingEffects);
-                        targetedCombatant.ResolveEffects();
                     }
+
+                    ActionResolutionPhase();
 
                     // check if combat is concluded
                     combatConcluded = CheckCombatConcluded();
@@ -66,11 +69,19 @@ namespace JMT.RPG.Combat
             return combatResult;
         }
 
+        private void ActionResolutionPhase()
+        {
+            foreach (Combatant combatant in _combatants)
+            {
+                combatant.ActionResolutionPhase();
+            }
+        }
+
         private void StartOfTurnPhase()
         {
             foreach(Combatant combatant in _combatants)
             {
-                combatant.StartOfTurn();
+                combatant.StartOfTurnPhase();
             }
         }
 
@@ -78,15 +89,15 @@ namespace JMT.RPG.Combat
         {
             foreach (Combatant combatant in _combatants)
             {
-                combatant.EndOfTurn();
+                combatant.EndOfTurnPhase();
             }
         }
 
-        private CombatState GetCombatState(int turnNumber)
+        private CombatContext GetCombatContext(int turnNumber)
         {
-            CombatState combatState = new CombatState()
+            CombatContext combatState = new CombatContext()
             {
-                CombatantStates = _combatants.Select(c => c.GetCombatantState()).ToArray(),
+                CombatantContexts = _combatants.Select(c => c.GetCombatantContext()).ToArray(),
                 TurnNumber = turnNumber,
             };
 

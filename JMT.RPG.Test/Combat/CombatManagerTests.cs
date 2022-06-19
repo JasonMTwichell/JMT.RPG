@@ -15,36 +15,38 @@ namespace JMT.RPG.Test.Combat
                 new Combatant(
                     new DummyInputHandler("1", "2"),
                     new CombatAbilityManager(new CombatAbility[]
+                    {
+                        new CombatAbility()
                         {
-                            new CombatAbility()
+                            CombatAbilityId = "1",
+                            Name = "TEST ABILITY",
+                            Description = "TEST ABILITY",
+                            Cooldown = 0,
+                            RemainingCooldown = 0,
+                            Effects = new CombatEffect[]
                             {
-                                CombatAbilityId = "1",
-                                Name = "TEST ABILITY",
-                                Description = "TEST ABILITY",
-                                Cooldown = 0,
-                                RemainingCooldown = 0,
-                                Effects = new CombatEffect[]
+                                new CombatEffect()
                                 {
-                                    new CombatEffect()
-                                    {
-                                        EffectedAttribute = "HEALTH",
-                                        EffectType = EffectType.PHYSICAL,
-                                        Magnitude = 0,
-                                        MagnitudeFactor = -1,
-                                    }
+                                    EffectedAttribute = "HEALTH",
+                                    EffectType = EffectType.PHYSICAL,
+                                    Magnitude = 0,
+                                    MagnitudeFactor = -1,
                                 }
                             }
-                        })
-                )
+                        }
+                    }),
+                    new CombatantStateManager()
+                    {
+                        TotalHealth = 100,
+                        RemainingHealth = 100,
+                        Strength = 10,
+                        Intellect = 10,
+                        Speed = 10,
+                    })
                 {
                     Id = "1",
                     Level = 1,
                     Name = "TEST PLAYER",
-                    TotalHealth = 100,
-                    RemainingHealth = 100,
-                    Strength = 10,
-                    Intellect = 10,
-                    Speed = 10,
                 }
             };
 
@@ -72,17 +74,21 @@ namespace JMT.RPG.Test.Combat
                                     }
                                 }
                             }
-                        })
-                )
-                {
-                        Id = "2",
-                        Name = "TEST ENEMY",
-                        Level= 1,
+                        }),
+                    new CombatantStateManager()
+                    {
                         Speed = 1,
                         Strength = 1,
                         Intellect = 1,
                         TotalHealth = 50,
                         RemainingHealth= 50,
+                    }
+                )
+                {
+                        Id = "2",
+                        Name = "TEST ENEMY",
+                        Level= 1,
+                       
                 }
             };
 
@@ -102,43 +108,46 @@ namespace JMT.RPG.Test.Combat
                 new Combatant(
                     new DummyInputHandler("1", "2"),
                     new CombatAbilityManager(new CombatAbility[]
+                    {
+                        new CombatAbility()
                         {
-                            new CombatAbility()
+                            CombatAbilityId = "1",
+                            Name = "TEST ABILITY",
+                            Description = "TEST ABILITY",
+                            Cooldown = 0,
+                            RemainingCooldown = 0,
+                            Effects = new CombatEffect[]
                             {
-                                CombatAbilityId = "1",
-                                Name = "TEST ABILITY",
-                                Description = "TEST ABILITY",
-                                Cooldown = 0,
-                                RemainingCooldown = 0,
-                                Effects = new CombatEffect[]
+                                new CombatEffect()
                                 {
-                                    new CombatEffect()
+                                    EffectedAttribute = "HEALTH",
+                                    EffectType = EffectType.PHYSICAL,
+                                    Magnitude = 0,
+                                    MagnitudeFactor = -1,
+                                    ForwardEffect = new CombatEffect()
                                     {
                                         EffectedAttribute = "HEALTH",
                                         EffectType = EffectType.PHYSICAL,
                                         Magnitude = 0,
                                         MagnitudeFactor = -1,
-                                        ForwardEffect = new CombatEffect()
-                                        {
-                                            EffectedAttribute = "HEALTH",
-                                            EffectType = EffectType.PHYSICAL,
-                                            Magnitude = 0,
-                                            MagnitudeFactor = -1,
-                                        },
-                                    }
+                                    },
                                 }
                             }
-                        })
+                        }
+                    }),
+                    new CombatantStateManager()
+                    {
+                        TotalHealth = 100,
+                        RemainingHealth = 100,
+                        Strength = 10,
+                        Intellect = 10,
+                        Speed = 10,
+                    }
                 )
                 {
                     Id = "1",
                     Level = 1,
-                    Name = "TEST PLAYER",
-                    TotalHealth = 100,
-                    RemainingHealth = 100,
-                    Strength = 10,
-                    Intellect = 10,
-                    Speed = 10,
+                    Name = "TEST PLAYER",                    
                 }
         };
 
@@ -147,36 +156,39 @@ namespace JMT.RPG.Test.Combat
                 new Combatant(
                     new DummyInputHandler("2", "2"),
                     new CombatAbilityManager(new CombatAbility[]
+                    {
+                        new CombatAbility()
                         {
-                            new CombatAbility()
+                            CombatAbilityId = "2",
+                            Name = "TEST ABILITY",
+                            Description = "TEST ABILITY",
+                            Cooldown = 0,
+                            RemainingCooldown = 0,
+                            Effects = new CombatEffect[]
                             {
-                                CombatAbilityId = "2",
-                                Name = "TEST ABILITY",
-                                Description = "TEST ABILITY",
-                                Cooldown = 0,
-                                RemainingCooldown = 0,
-                                Effects = new CombatEffect[]
+                                new CombatEffect()
                                 {
-                                    new CombatEffect()
-                                    {
-                                        EffectedAttribute = EffectedAttribute.HEALTH,
-                                        EffectType = EffectType.PHYSICAL,
-                                        MagnitudeFactor = -1,
-                                        Magnitude = 1,
-                                    }
+                                    EffectedAttribute = EffectedAttribute.HEALTH,
+                                    EffectType = EffectType.PHYSICAL,
+                                    MagnitudeFactor = -1,
+                                    Magnitude = 1,
                                 }
                             }
-                        })
-                )
-                {
-                        Id = "2",
-                        Name = "TEST ENEMY",
-                        Level= 1,
+                        }
+                    }),
+                    new CombatantStateManager()
+                    {
                         Speed = 1,
                         Strength = 1,
                         Intellect = 1,
                         TotalHealth = 50,
                         RemainingHealth= 50,
+                    }
+                )
+                {
+                        Id = "2",
+                        Name = "TEST ENEMY",
+                        Level= 1,                        
                 }
              };
 

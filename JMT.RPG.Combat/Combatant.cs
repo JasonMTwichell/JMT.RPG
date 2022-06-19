@@ -14,119 +14,89 @@ namespace JMT.RPG.Combat
         public string Id { get; init; }
         public string Name { get; init; }
         public int Level { get; init; }
-        public int TotalHealth { get; set; }
-        public int RemainingHealth { get; set; }
-        public int Intellect { get; set; }
-        public int Strength { get; set; }
-        public int Speed { get; set; }        
+        public int Speed
+        {
+            get
+            {
+                return _combatantStateMgr.GetCombatantState().Speed;
+            }
+        }
+
+        public int RemainingHealth
+        {
+            get
+            {
+                return _combatantStateMgr.GetCombatantState().RemainingHealth;
+            }
+        }
         #endregion
 
         private IInputHandler _inputHandler;
-        private ICombatAbilityManager _combatAbilityManager;
-        private List<ResolvedEffect> _queuedEffects { get; set; }
-        private List<ResolvedEffect> _forwardEffects { get; set; }
+        private ICombatAbilityManager _combatantAbilityMgr;
+        private ICombatantStateManager _combatantStateMgr;        
 
-        public Combatant(IInputHandler inputHandler, ICombatAbilityManager combatAbilityManager)
+        public Combatant(IInputHandler inputHandler, ICombatAbilityManager combatantAbilityMgr, ICombatantStateManager combatantStateMgr)
         {
             _inputHandler = inputHandler;
-            _combatAbilityManager = combatAbilityManager;
-
-            _queuedEffects = new List<ResolvedEffect>();
-            _forwardEffects = new List<ResolvedEffect>();
+            _combatantAbilityMgr = combatantAbilityMgr;
+            _combatantStateMgr = combatantStateMgr;
         }
 
-        public async Task<IEnumerable<ResolvedEffect>> ChooseCombatAbility(CombatState combatState)
+        public async Task<IEnumerable<ResolvedEffect>> ChooseCombatAbility(CombatContext combatContext)
         {
-            CombatantContext context = new CombatantContext()
-            {
-                TurnNumber = combatState.TurnNumber,
-                CombatantStates = combatState.CombatantStates,
-                CombatantAbilities = _combatAbilityManager.GetCombatAbilities().ToArray(),
-            };
-
-            InputResult input = await _inputHandler.GetInput(context);
+            InputResult input = await _inputHandler.GetInput(combatContext);
 
             CombatAbilityResolutionContext resCtx = new CombatAbilityResolutionContext()
             {
                 CombatAbilityID = input.ChosenAbilityId,
                 TargetId = input.TargetId,
-                Strength = Strength,
-                Intellect = Intellect,
-                Speed = Speed,
+                Strength = _combatantStateMgr.GetCombatantState().Strength,
+                Intellect = _combatantStateMgr.GetCombatantState().Intellect,
+                Speed = _combatantStateMgr.GetCombatantState().Speed,
             };
 
-            ResolvedEffect[] resolvedEffects = _combatAbilityManager.ResolveCombatAbility(resCtx).ToArray();
+            ResolvedEffect[] resolvedEffects = _combatantAbilityMgr.ResolveCombatAbility(resCtx).ToArray();
             return resolvedEffects;
         }
 
-        internal void StartOfTurn()
+        internal void StartOfTurnPhase()
         {
             // resolve forward effects
-            ResolveEffects();
-            _combatAbilityManager.ApplyCooldownAllAbilities(-1);
-        }
-
-        internal void EndOfTurn()
-        {
-            // move forward effects to effect queue
-            _queuedEffects.AddRange(_forwardEffects);
-            _forwardEffects.Clear();
+            _combatantStateMgr.ResolveAppliedEffects();
+            _combatantAbilityMgr.ApplyCooldownAllAbilities(-1);
         }
 
         public void ApplyEffects(ResolvedEffect[] targetingEffects)
         {
-            _queuedEffects.AddRange(targetingEffects);
+            _combatantStateMgr.ApplyEffects(targetingEffects);
         }
 
-        public void ResolveEffects()
+        internal void ActionResolutionPhase()
         {
-            foreach(ResolvedEffect effect in _queuedEffects)
-            {
-                ResolveEffect(effect);
-                if(effect.ForwardEffect != null)
-                {
-                    _forwardEffects.Add(effect.ForwardEffect);
-                }                
-            }
-
-            _queuedEffects.Clear();
+            _combatantStateMgr.ResolveAppliedEffects();
         }
 
-        private void ResolveEffect(ResolvedEffect effect)
+        internal void EndOfTurnPhase()
         {
-            switch(effect.EffectedAttribute)
-            {
-                case EffectedAttribute.HEALTH:
-                    RemainingHealth += effect.ResolvedMagnitude;
-                    break;
-                case EffectedAttribute.INTELLECT:
-                    Intellect += effect.ResolvedMagnitude;
-                    break;
-                case EffectedAttribute.STRENGTH:
-                    Strength += effect.ResolvedMagnitude;
-                    break;
-                case EffectedAttribute.SPEED:
-                    Speed += effect.ResolvedMagnitude;
-                    break;                
-            }
+            _combatantStateMgr.CarryForwardEffects();
         }
 
-        public CombatantState GetCombatantState()
+        public CombatantContext GetCombatantContext()
         {
-            CombatantState combatantState = new CombatantState()
+            CombatantContext context = new CombatantContext()
             {
                 Id = Id,
                 Name = Name,
                 Level = Level,
-                TotalHealth = TotalHealth,
-                RemainingHealth = RemainingHealth,
-                Intellect = Intellect,
-                Speed = Speed,
-                Strength = Strength,
-                CombatAbilities = _combatAbilityManager.GetCombatAbilities().ToArray(),
+                TotalHealth = _combatantStateMgr.GetCombatantState().TotalHealth,
+                RemainingHealth = _combatantStateMgr.GetCombatantState().RemainingHealth,
+                Strength = _combatantStateMgr.GetCombatantState().Strength,
+                Intellect = _combatantStateMgr.GetCombatantState().Intellect,
+                Speed = _combatantStateMgr.GetCombatantState().Speed,
+                CombatAbilities = _combatantAbilityMgr.GetCombatAbilities().ToArray(),
             };
 
-            return combatantState;
+            return context;
         }
     }
 }

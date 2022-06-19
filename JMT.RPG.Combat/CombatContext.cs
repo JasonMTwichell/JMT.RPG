@@ -1,9 +1,8 @@
 ﻿namespace JMT.RPG.Combat
 {
-    internal record CombatantContext
+    public record CombatContext
     {
         public int TurnNumber { get; set; }
-        public CombatantState[] CombatantStates { get; set; }
-        public CombatAbility[] CombatantAbilities { get; set; }
+        public CombatantContext[] CombatantContexts { get; set; }        
     }
 }
