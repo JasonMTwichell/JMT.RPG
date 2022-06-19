@@ -63,6 +63,7 @@ namespace JMT.RPG.Combat
         {
             // resolve forward effects
             ResolveEffects();
+            _combatAbilityManager.ApplyCooldownAllAbilities(-1);
         }
 
         internal void EndOfTurn()
