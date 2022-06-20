@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace JMT.RPG.Combat
+namespace JMT.RPG.Core.Contracts.Combat
 {
-    public class CombatEffect
+    public record CombatEffect
     {
         public string EffectedAttribute { get; set; }
         public string EffectType { get; set; }

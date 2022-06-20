@@ -1,4 +1,4 @@
-﻿namespace JMT.RPG.Combat
+﻿namespace JMT.RPG.Core.Interfaces
 {
     public interface IInputHandler
     {

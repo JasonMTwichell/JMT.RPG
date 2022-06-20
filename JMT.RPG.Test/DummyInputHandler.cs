@@ -1,8 +1,4 @@
-﻿using JMT.RPG.Combat;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using JMT.RPG.Core.Interfaces;
 using System.Threading.Tasks;
 
 namespace JMT.RPG.Test

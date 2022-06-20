@@ -1,5 +1,5 @@
-﻿using JMT.RPG.Combat;
-using JMT.RPG.Core.Game;
+﻿using JMT.RPG.Core.Contracts.Combat;
+using JMT.RPG.Core.Interfaces;
 
 namespace JMT.RPG.Campaign
 {
@@ -7,7 +7,8 @@ namespace JMT.RPG.Campaign
     {
         private IInputHandler _inputHandler;
         private ILootManager _lootMgr;
-        public CampaignManager(IInputHandler inputHandler, ILootManager lootMgr)
+        private ICombatManager _combatMgr;
+        public CampaignManager(ICombatManager combatMgr, IInputHandler inputHandler, ILootManager lootMgr)
         {
             _inputHandler = inputHandler;       
             _lootMgr = lootMgr;
@@ -24,8 +25,7 @@ namespace JMT.RPG.Campaign
 
                 if(campaignEvent.IsCombatEvent)
                 {
-                    ICombatManager combatMgr = new CombatManager(campaignCtx.PlayerParty, campaignEvent.EnemyParty);
-                    CombatResult combatResult = await combatMgr.PerformCombat();
+                    CombatResult combatResult = await _combatMgr.PerformCombat();
 
                     if(combatResult.PlayerPartyWon)
                     {
@@ -66,59 +66,6 @@ namespace JMT.RPG.Campaign
             {
                 await _inputHandler.GetInput(inputEvent);
             }
-        }
-
-        private IEnumerable<Combatant> BuildPlayerCombatants(IEnumerable<CampaignCharacter> characters, IEnumerable<CampaignPartyItem> campaignItems)
-        {
-            // this can be shared across all chars
-            IInputHandler combatInputHandler = new CombatInputHandler();
-
-            // accessible to all party members
-            CombatAbility[] itemAbilities = campaignItems.Select(ci => new CombatAbility()
-            {
-                CombatAbilityId = string.Format("ITEM_{0}",ci.ItemID),
-                Cooldown = 0,
-                Name = ci.ItemName,
-                Description = ci.ItemDescription,
-                RemainingCooldown = 0,                
-                Effects = ci.Effects.Select(e => BuildCombatEffect(e)),
-            }).ToArray();
-
-            foreach (CampaignCharacter character in characters)
-            {
-                CombatAbility[] combatAbilities = itemAbilities.Concat(character.CombatAbilities).ToArray();
-                ICombatAbilityManager abilityMgr = new CombatAbilityManager(combatAbilities);
-                ICombatantStateManager stateMgr = new CombatantStateManager()
-                {
-                    TotalHealth = character.TotalHealth,
-                    RemainingHealth = character.RemainingHealth,
-                    Strength = character.Strength,
-                    Intellect = character.Intellect,
-                    Speed = character.Speed,
-                };
-
-                Combatant combatant = new Combatant(combatInputHandler, abilityMgr, stateMgr)
-                {
-                    Id = character.Id,
-                    Name = character.Name,
-                };
-
-                yield return combatant;
-            }
-        }
-
-        private CombatEffect BuildCombatEffect(Effect effect)
-        {
-            CombatEffect combatEffect = new CombatEffect()
-            {
-                EffectedAttribute = effect.EffectedAttribute,
-                EffectType = effect.EffectType,
-                Magnitude = effect.Magnitude,
-                MagnitudeFactor = effect.MagnitudeFactor,
-                ForwardEffect = effect.ForwardEffect != null ? BuildCombatEffect(effect.ForwardEffect) : null,
-            };
-
-            return combatEffect;
         }
     }
 }

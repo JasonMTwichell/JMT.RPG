@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\JMT.RPG.Combat\JMT.RPG.Combat.csproj" />
+    <ProjectReference Include="..\JMT.RPG.Core\JMT.RPG.Core.csproj" />
   </ItemGroup>
 
 </Project>

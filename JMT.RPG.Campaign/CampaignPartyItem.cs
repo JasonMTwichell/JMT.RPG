@@ -1,4 +1,5 @@
 ﻿using JMT.RPG.Core.Game;
+using JMT.RPG.Core.Game.Domain;
 
 namespace JMT.RPG.Campaign
 {

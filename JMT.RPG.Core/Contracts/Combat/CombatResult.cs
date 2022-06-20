@@ -1,4 +1,4 @@
-﻿namespace JMT.RPG.Combat
+﻿namespace JMT.RPG.Core.Contracts.Combat
 {
     public record CombatResult
     {

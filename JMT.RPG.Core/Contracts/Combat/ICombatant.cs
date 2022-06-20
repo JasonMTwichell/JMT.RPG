@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace JMT.RPG.Combat
+namespace JMT.RPG.Core.Contracts.Combat
 {
     public interface ICombatant
     {
-        string Id { get; init; }        
+        string Id { get; init; }
         int Speed { get; }
         int RemainingHealth { get; }
         Task<IEnumerable<ResolvedEffect>> ChooseCombatAbility(CombatContext combatContext);

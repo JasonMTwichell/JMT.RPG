@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace JMT.RPG.Combat
+namespace JMT.RPG.Core.Contracts.Combat
 {
     public class CombatAbility
     {

@@ -1,9 +1,4 @@
-﻿using JMT.RPG.Combat;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using JMT.RPG.Core.Contracts.Combat;
 
 namespace JMT.RPG.Campaign
 {
@@ -11,7 +6,7 @@ namespace JMT.RPG.Campaign
     {
         public IEnumerable<CampaignEvent> CampaignEvents { get; set; }
         public int PlayerPartyCurrency { get; set; }
-        public IEnumerable<Combatant> PlayerParty { get; set; }
+        public IEnumerable<ICombatant> PlayerParty { get; set; }
         public List<CampaignPartyItem> PlayerPartyItems { get; set; }
     }
 }

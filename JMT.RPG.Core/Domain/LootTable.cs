@@ -1,4 +1,4 @@
-﻿namespace JMT.RPG.Core.Game
+﻿namespace JMT.RPG.Core.Game.Domain
 {
     public class LootTable
     {
