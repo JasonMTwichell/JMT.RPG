@@ -16,7 +16,7 @@
             for(int i = 0; i < numRolls; i++)
             {
                 int roll = random.Next(minRoll, maxRoll);
-                CampaignLoot loot = lootTable.Loot.FirstOrDefault(l => l.Key == roll);
+                CampaignLoot? loot = lootTable.Loot.FirstOrDefault(l => l.Key == roll);
                 if (loot != null) yield return loot;
             }
         }
