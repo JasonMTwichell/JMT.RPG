@@ -18,4 +18,8 @@
     <ProjectReference Include="..\JMT.RPG.Combat\JMT.RPG.Combat.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Campaign\" />
+  </ItemGroup>
+
 </Project>
