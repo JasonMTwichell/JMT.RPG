@@ -12,8 +12,7 @@ namespace JMT.RPG.Combat
     {
         #region Stats
         public string Id { get; init; }
-        public string Name { get; init; }
-        public int Level { get; init; }
+        public string Name { get; init; }        
         public int Speed
         {
             get
@@ -21,7 +20,6 @@ namespace JMT.RPG.Combat
                 return _stateMgr.GetCombatantState().Speed;
             }
         }
-
         public int RemainingHealth
         {
             get

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace JMT.RPG.Combat
 {
-    public class CombatManager
+    public class CombatManager: ICombatManager
     {
         private IEnumerable<ICombatant> _playerParty;
         private IEnumerable<ICombatant> _enemyParty;
