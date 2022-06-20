@@ -44,8 +44,7 @@ namespace JMT.RPG.Test.Combat
                         Speed = 10,
                     })
                 {
-                    Id = "1",
-                    Level = 1,
+                    Id = "1",                    
                     Name = "TEST PLAYER",
                 }
             };
@@ -86,8 +85,7 @@ namespace JMT.RPG.Test.Combat
                 )
                 {
                         Id = "2",
-                        Name = "TEST ENEMY",
-                        Level= 1,
+                        Name = "TEST ENEMY",                        
                        
                 }
             };
@@ -145,8 +143,7 @@ namespace JMT.RPG.Test.Combat
                     }
                 )
                 {
-                    Id = "1",
-                    Level = 1,
+                    Id = "1",                    
                     Name = "TEST PLAYER",                    
                 }
         };
@@ -187,8 +184,7 @@ namespace JMT.RPG.Test.Combat
                 )
                 {
                         Id = "2",
-                        Name = "TEST ENEMY",
-                        Level= 1,                        
+                        Name = "TEST ENEMY",                                               
                 }
              };
 

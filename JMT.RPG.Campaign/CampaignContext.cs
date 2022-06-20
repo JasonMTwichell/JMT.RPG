@@ -7,9 +7,11 @@ using System.Threading.Tasks;
 
 namespace JMT.RPG.Campaign
 {
-    public record CampaignContext
+    public class CampaignContext
     {
         public IEnumerable<CampaignEvent> CampaignEvents { get; set; }
-        public CampaignParty PlayerParty { get; set; }
+        public int PlayerPartyCurrency { get; set; }
+        public IEnumerable<Combatant> PlayerParty { get; set; }
+        public List<CampaignPartyItem> PlayerPartyItems { get; set; }
     }
 }

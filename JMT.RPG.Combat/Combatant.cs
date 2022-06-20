@@ -84,8 +84,7 @@ namespace JMT.RPG.Combat
             CombatantContext context = new CombatantContext()
             {
                 Id = Id,
-                Name = Name,
-                Level = Level,
+                Name = Name,                
                 TotalHealth = _stateMgr.GetCombatantState().TotalHealth,
                 RemainingHealth = _stateMgr.GetCombatantState().RemainingHealth,
                 Strength = _stateMgr.GetCombatantState().Strength,

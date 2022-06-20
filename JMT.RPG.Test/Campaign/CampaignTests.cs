@@ -40,7 +40,7 @@ namespace JMT.RPG.Test.Campaign
                             }
                         }
                     },
-                    CampaignCharacters = new List<CampaignCharacter>()
+                    PlayerParty = new List<CampaignCharacter>()
                     {
                         new CampaignCharacter()
                         {
