@@ -9,7 +9,6 @@ namespace JMT.RPG.Campaign
         public int NumberOfLootRolls { get; set; }
         public int AwardedCurrency { get; set; }
         public CampaignEventLootTable? LootTable { get; set; }
-        public ICollection<ICombatant>? EnemyParty { get; set; }
         public ICollection<CampaignDialog> CampaignDialog { get; set; }        
     }
 }

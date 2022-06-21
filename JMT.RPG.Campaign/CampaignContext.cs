@@ -6,7 +6,6 @@ namespace JMT.RPG.Campaign
     {
         public IEnumerable<CampaignEvent> CampaignEvents { get; set; }
         public int PlayerPartyCurrency { get; set; }
-        public IEnumerable<ICombatant> PlayerParty { get; set; }
         public List<CampaignPartyItem> PlayerPartyItems { get; set; }
     }
 }

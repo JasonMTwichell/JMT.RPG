@@ -6,7 +6,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using JMT.RPG.Core.Contracts.Combat;
-using JMT.RPG.Core.Interfaces;
 
 namespace JMT.RPG.Combat
 {
@@ -31,11 +30,11 @@ namespace JMT.RPG.Combat
         }
         #endregion
 
-        private IInputHandler _inputHandler;
+        private ICombatInputHandler _inputHandler;
         private ICombatAbilityManager _abilityMgr;
         private ICombatantStateManager _stateMgr;        
 
-        public Combatant(IInputHandler inputHandler, ICombatAbilityManager abilityMgr, ICombatantStateManager stateMgr)
+        public Combatant(ICombatInputHandler inputHandler, ICombatAbilityManager abilityMgr, ICombatantStateManager stateMgr)
         {
             _inputHandler = inputHandler;
             _abilityMgr = abilityMgr;
@@ -44,7 +43,7 @@ namespace JMT.RPG.Combat
 
         public async Task<IEnumerable<ResolvedEffect>> ChooseCombatAbility(CombatContext combatContext)
         {
-            InputResult input = await _inputHandler.GetInput(combatContext);
+            CombatInputResult input = await _inputHandler.GetInput(combatContext);
 
             CombatAbilityResolutionContext resCtx = new CombatAbilityResolutionContext()
             {

@@ -14,7 +14,7 @@ namespace JMT.RPG.Test.Combat
             Combatant[] playerParty = new Combatant[]
             {
                 new Combatant(
-                    new DummyInputHandler("1", "2"),
+                    new DummyCombatInputHandler("1", "2"),
                     new CombatAbilityManager(new CombatAbility[]
                     {
                         new CombatAbility()
@@ -53,7 +53,7 @@ namespace JMT.RPG.Test.Combat
             Combatant[] enemyParty = new Combatant[]
             {
                 new Combatant(
-                    new DummyInputHandler("2", "2"),
+                    new DummyCombatInputHandler("2", "2"),
                     new CombatAbilityManager(new CombatAbility[]
                         {
                             new CombatAbility()
@@ -105,7 +105,7 @@ namespace JMT.RPG.Test.Combat
             Combatant[] playerParty = new Combatant[]
         {
                 new Combatant(
-                    new DummyInputHandler("1", "2"),
+                    new DummyCombatInputHandler("1", "2"),
                     new CombatAbilityManager(new CombatAbility[]
                     {
                         new CombatAbility()
@@ -152,7 +152,7 @@ namespace JMT.RPG.Test.Combat
             Combatant[] enemyParty = new Combatant[]
              {
                 new Combatant(
-                    new DummyInputHandler("2", "2"),
+                    new DummyCombatInputHandler("2", "2"),
                     new CombatAbilityManager(new CombatAbility[]
                     {
                         new CombatAbility()

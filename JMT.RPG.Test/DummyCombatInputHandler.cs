@@ -1,21 +1,21 @@
-﻿using JMT.RPG.Core.Interfaces;
+﻿using JMT.RPG.Core.Contracts.Combat;
 using System.Threading.Tasks;
 
 namespace JMT.RPG.Test
 {
-    internal class DummyInputHandler : IInputHandler
+    internal class DummyCombatInputHandler : ICombatInputHandler
     {
         private string _defaultAbility;
         private string _defaultTarget;
-        public DummyInputHandler(string defaultAbility, string defaultTarget) 
+        public DummyCombatInputHandler(string defaultAbility, string defaultTarget) 
         {
             _defaultAbility = defaultAbility;
             _defaultTarget = defaultTarget;
         }
 
-        public async Task<InputResult> GetInput<T>(T context)
+        public async Task<CombatInputResult> GetInput(CombatContext context)
         {
-            return new InputResult()
+            return new CombatInputResult()
             {
                 ChosenAbilityId = _defaultAbility,
                 TargetId = _defaultTarget,

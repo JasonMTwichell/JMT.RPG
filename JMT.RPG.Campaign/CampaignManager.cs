@@ -1,18 +1,20 @@
-﻿using JMT.RPG.Core.Contracts.Combat;
-using JMT.RPG.Core.Interfaces;
+﻿using JMT.RPG.Core.Contracts.Campaign;
+using JMT.RPG.Core.Contracts.Combat;
 
 namespace JMT.RPG.Campaign
 {
     public class CampaignManager
     {
-        private IInputHandler _inputHandler;
+        private ICampaignInputHandler _inputHandler;
         private ILootManager _lootMgr;
         private ICombatManager _combatMgr;
-        public CampaignManager(ICombatManager combatMgr, IInputHandler inputHandler, ILootManager lootMgr)
+        public CampaignManager(ICombatManager combatMgr, ICampaignInputHandler inputHandler, ILootManager lootMgr)
         {
             _inputHandler = inputHandler;       
             _lootMgr = lootMgr;
+            _combatMgr = combatMgr;
         }
+
         public async Task<CampaignResult> PerformCampaign(CampaignContext campaignCtx)
         {
             CampaignEvent[] sequencedEvents = campaignCtx.CampaignEvents.OrderBy(c => c.EventSequence).ToArray();
@@ -21,7 +23,11 @@ namespace JMT.RPG.Campaign
             foreach (CampaignEvent campaignEvent in sequencedEvents)
             {
                 // roll pre-combat dialog
-                await OutputDialog(campaignEvent.CampaignDialog.Where(d => d.IsPreCombat).ToArray());
+                CampaignDialog[]? preCombatDialog = campaignEvent.CampaignDialog?.Where(d => d.IsPreCombat).ToArray();
+                if (preCombatDialog != null) 
+                {
+                    await OutputDialog(preCombatDialog);
+                }
 
                 if(campaignEvent.IsCombatEvent)
                 {
@@ -43,7 +49,11 @@ namespace JMT.RPG.Campaign
                     }
 
                     // roll post combat dialog
-                    await OutputDialog(campaignEvent.CampaignDialog.Where(d => !d.IsPreCombat).ToArray());
+                    CampaignDialog[]? postCombatDialog = campaignEvent.CampaignDialog?.Where(d => !d.IsPreCombat).ToArray();
+                    if(postCombatDialog != null)
+                    {
+                        await OutputDialog(postCombatDialog);
+                    }
                 }
             }
 
@@ -57,12 +67,12 @@ namespace JMT.RPG.Campaign
 
         private async Task OutputDialog(IEnumerable<CampaignDialog> dialogLines)
         {
-            DialogInputEvent[] inputEvents = dialogLines.OrderBy(d => d.DialogSequence).Select(ie => new DialogInputEvent()
+            CampaignInputContext[] inputEvents = dialogLines.OrderBy(d => d.DialogSequence).Select(ie => new CampaignInputContext()
             {
-                DialogLine = ie.Dialog
+                Dialog = ie.Dialog
             }).ToArray();
 
-            foreach(DialogInputEvent inputEvent in inputEvents)
+            foreach(CampaignInputContext inputEvent in inputEvents)
             {
                 await _inputHandler.GetInput(inputEvent);
             }

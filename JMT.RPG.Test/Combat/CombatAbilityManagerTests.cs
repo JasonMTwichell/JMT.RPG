@@ -1,10 +1,8 @@
-﻿using JMT.RPG.Combat;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using JMT.RPG.Combat;
+using JMT.RPG.Core.Contracts.Combat;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace JMT.RPG.Test.Combat
 {

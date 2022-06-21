@@ -1,4 +1,5 @@
 ﻿using JMT.RPG.Combat;
+using JMT.RPG.Core.Contracts.Combat;
 
 namespace JMT.RPG.Combat
 {
