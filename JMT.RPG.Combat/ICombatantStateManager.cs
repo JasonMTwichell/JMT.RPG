@@ -10,7 +10,7 @@ namespace JMT.RPG.Combat
     public interface ICombatantStateManager
     {
         CombatantState GetCombatantState();
-        void ApplyEffects(IEnumerable<ResolvedEffect> resolvedEffects);
+        void ApplyEffects(IEnumerable<ResolvedEffect> resolvedEffects, ICombatant combatant);
         CombatantState ResolveAppliedEffects();
         void CarryForwardEffects();
     }

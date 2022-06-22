@@ -96,7 +96,7 @@ namespace JMT.RPG.Test.Combat
             CombatResult result = await combatManager.PerformCombat();
 
             // player is doing 10 damage per turn to 50 hp enemy 
-            Assert.AreEqual(5, result.FinalTurn);
+            Assert.AreEqual(5, result.FinalTurnNum);
         }
 
         [TestMethod]
@@ -194,7 +194,7 @@ namespace JMT.RPG.Test.Combat
             CombatResult result = await combatManager.PerformCombat();
 
             // player is doing 10 damage first turn, then 20 the next two
-            Assert.AreEqual(3, result.FinalTurn);
+            Assert.AreEqual(3, result.FinalTurnNum);
         }
     }
 }

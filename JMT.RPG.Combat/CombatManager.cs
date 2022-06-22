@@ -9,19 +9,15 @@ namespace JMT.RPG.Combat
 {
     public class CombatManager: ICombatManager
     {
-        private IEnumerable<ICombatant> _playerParty;
-        private IEnumerable<ICombatant> _enemyParty;
-        private IEnumerable<ICombatant> _combatants { 
-            get
-            {
-                return _playerParty.Concat(_enemyParty);
-            }
+        
+        public CombatManager()
+        {
+            
         }
 
-        public CombatManager(IEnumerable<ICombatant> playerParty, IEnumerable<ICombatant> enemyParty)
+        public Task<CombatResult> PerformCombat(CombatEncounterContext combatEncounterCtx)
         {
-            _playerParty = playerParty;
-            _enemyParty = enemyParty;
+            throw new NotImplementedException();
         }
 
         public async Task<CombatResult> PerformCombat()
@@ -63,7 +59,7 @@ namespace JMT.RPG.Combat
 
             CombatResult combatResult = new CombatResult()
             {
-                FinalTurn = turnNumber,
+                FinalTurnNum = turnNumber,
                 PlayerPartyWon = _enemyParty.All(ec => ec.RemainingHealth <= 0) && _playerParty.Any(ec => ec.RemainingHealth >= 0)
             };
 
