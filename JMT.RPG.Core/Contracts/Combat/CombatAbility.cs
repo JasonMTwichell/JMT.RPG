@@ -8,7 +8,7 @@ namespace JMT.RPG.Core.Contracts.Combat
 {
     public class CombatAbility
     {
-        public string CombatAbilityId { get; set; }
+        public string CombatAbilityID { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public int Cooldown { get; set; }

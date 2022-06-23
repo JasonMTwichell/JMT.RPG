@@ -16,7 +16,7 @@ namespace JMT.RPG.Test.Combat
             {
                 new CombatAbility()
                 {
-                    CombatAbilityId = "1",
+                    CombatAbilityID = "1",
                     Cooldown = 3,
                     Effects = new CombatEffect[]
                     {
@@ -36,7 +36,7 @@ namespace JMT.RPG.Test.Combat
             CombatAbilityResolutionContext ctx = new CombatAbilityResolutionContext()
             {
                 CombatAbilityID = "1",
-                TargetId = "1",
+                TargetID = "1",
                 Strength = 10,
                 Intellect = 10,
                 Speed = 10,
@@ -59,7 +59,7 @@ namespace JMT.RPG.Test.Combat
             {
                 new CombatAbility()
                 {
-                    CombatAbilityId = "1",
+                    CombatAbilityID = "1",
                     Cooldown = 3,
                     Effects = new CombatEffect[]
                     {
@@ -86,7 +86,7 @@ namespace JMT.RPG.Test.Combat
             CombatAbilityResolutionContext ctx = new CombatAbilityResolutionContext()
             {
                 CombatAbilityID = "1",
-                TargetId = "1",
+                TargetID = "1",
                 Strength = 10,
                 Intellect = 10,
                 Speed = 10,
@@ -115,7 +115,7 @@ namespace JMT.RPG.Test.Combat
             {
                 new CombatAbility()
                 {
-                    CombatAbilityId = "1",
+                    CombatAbilityID = "1",
                     Cooldown = 3,
                     Effects = new CombatEffect[]
                     {
@@ -135,7 +135,7 @@ namespace JMT.RPG.Test.Combat
             CombatAbilityResolutionContext ctx = new CombatAbilityResolutionContext()
             {
                 CombatAbilityID = "1",
-                TargetId = "1",
+                TargetID = "1",
                 Strength = 10,
                 Intellect = 10,
                 Speed = 10,
@@ -156,7 +156,7 @@ namespace JMT.RPG.Test.Combat
             {
                 new CombatAbility()
                 {
-                    CombatAbilityId = "1",
+                    CombatAbilityID = "1",
                     RemainingCooldown = 3,
                     Cooldown = 3,
                     Effects = new CombatEffect[]
@@ -177,7 +177,7 @@ namespace JMT.RPG.Test.Combat
             CombatAbilityResolutionContext ctx = new CombatAbilityResolutionContext()
             {
                 CombatAbilityID = "1",
-                TargetId = "1",
+                TargetID = "1",
                 Strength = 10,
                 Intellect = 10,
                 Speed = 10,
@@ -193,7 +193,7 @@ namespace JMT.RPG.Test.Combat
             {
                 new CombatAbility()
                 {
-                    CombatAbilityId = "1",
+                    CombatAbilityID = "1",
                     RemainingCooldown = 0,
                     Cooldown = 3,
                     Effects = new CombatEffect[]
@@ -209,7 +209,7 @@ namespace JMT.RPG.Test.Combat
                 },
                 new CombatAbility()
                 {
-                    CombatAbilityId = "2",
+                    CombatAbilityID = "2",
                     RemainingCooldown = 0,
                     Cooldown = 0,
                     Effects = new CombatEffect[]

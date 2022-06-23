@@ -31,7 +31,12 @@ namespace JMT.RPG.Campaign
 
                 if(campaignEvent.IsCombatEvent)
                 {
-                    CombatResult combatResult = await _combatMgr.PerformCombat();
+                    CombatEncounterContext combatEncCtx = new CombatEncounterContext()
+                    {
+                        // TODO: ADD STUFF HERE  
+                    };
+
+                    CombatResult combatResult = await _combatMgr.PerformCombat(combatEncCtx);
 
                     if(combatResult.PlayerPartyWon)
                     {

@@ -1,4 +1,4 @@
-﻿namespace JMT.RPG.Core.Contracts.Combat
+﻿namespace JMT.RPG.Combat
 {
     public record ResolvedEffect
     {

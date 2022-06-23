@@ -1,4 +1,6 @@
-﻿namespace JMT.RPG.Combat
+﻿using JMT.RPG.Core.Contracts.Combat;
+
+namespace JMT.RPG.Combat
 {
     public record CombatantState
     {
@@ -6,6 +8,6 @@
         public int RemainingHealth { get; set; }
         public int Intellect { get; set; }
         public int Strength { get; set; }
-        public int Speed { get; set; }        
+        public int Speed { get; set; }     
     }
 }

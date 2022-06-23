@@ -122,7 +122,7 @@ namespace JMT.RPG.Test.Campaign
                     {
                         new CombatAbility()
                         {
-                            CombatAbilityId = "1",
+                            CombatAbilityID = "1",
                             Name = "TEST ABILITY",
                             Description = "TEST ABILITY",
                             Cooldown = 0,
@@ -148,7 +148,7 @@ namespace JMT.RPG.Test.Campaign
                         Speed = 10,
                     })
                 {
-                    Id = "1",
+                    CombatantID = "1",
                     Name = "TEST PLAYER",
                 }
             };
@@ -161,7 +161,7 @@ namespace JMT.RPG.Test.Campaign
                         {
                             new CombatAbility()
                             {
-                                CombatAbilityId = "2",
+                                CombatAbilityID = "2",
                                 Name = "TEST ABILITY",
                                 Description = "TEST ABILITY",
                                 Cooldown = 0,
@@ -188,7 +188,7 @@ namespace JMT.RPG.Test.Campaign
                     }
                 )
                 {
-                        Id = "2",
+                        CombatantID = "2",
                         Name = "TEST ENEMY",
 
                 }

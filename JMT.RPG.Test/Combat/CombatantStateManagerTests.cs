@@ -15,7 +15,7 @@ namespace JMT.RPG.Test.Combat
         [TestMethod]
         public void TestEffectsAppliedToState()
         {
-            ICombatantStateManager mgr = new CombatantStateManager()
+            IResolvedEffectManager mgr = new CombatantStateManager()
             {
                 TotalHealth = 100,
                 RemainingHealth = 100,
@@ -59,7 +59,7 @@ namespace JMT.RPG.Test.Combat
         [TestMethod]
         public void TestEffectsCarriedForward()
         {
-            ICombatantStateManager mgr = new CombatantStateManager()
+            IResolvedEffectManager mgr = new CombatantStateManager()
             {
                 TotalHealth = 100,
                 RemainingHealth = 100,

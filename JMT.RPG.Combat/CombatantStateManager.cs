@@ -1,80 +1,48 @@
-﻿using JMT.RPG.Core.Contracts.Combat;
-
-namespace JMT.RPG.Combat
+﻿namespace JMT.RPG.Combat
 {
-    public class CombatantStateManager : ICombatantStateManager
+    public class CombatantStateManager : IResolvedEffectManager
     {
-        public int TotalHealth { get; set; }
-        public int RemainingHealth { get; set; }
-        public int Intellect { get; set; }
-        public int Strength { get; set; }
-        public int Speed { get; set; }
-        private List<ResolvedEffect> _queuedEffects { get; set; }
-        private List<ResolvedEffect> _forwardEffects { get; set; }
-        public CombatantStateManager()
+        public CombatantBattleContext ApplyEffects(CombatantBattleContext ctx, IEnumerable<ResolvedEffect> resolvedEffects)
         {
-            _queuedEffects = new List<ResolvedEffect>();
-            _forwardEffects = new List<ResolvedEffect>();
+            List<ResolvedEffect> appliedEffects = new List<ResolvedEffect>(ctx.AppliedEffects);
+            appliedEffects.AddRange(resolvedEffects);
+
+            return ctx with { AppliedEffects = appliedEffects };
         }
 
-        public void ApplyEffects(IEnumerable<ResolvedEffect> resolvedEffects)
+        public CombatantBattleContext ResolveAppliedEffects(CombatantBattleContext ctx)
         {
-            _queuedEffects.AddRange(resolvedEffects);
-        }
+            List<ResolvedEffect> carryFwdEff = new List<ResolvedEffect>();
+            CombatantState state = ctx.CombatantState;
 
-        public CombatantState ResolveAppliedEffects()
-        {
-            foreach (ResolvedEffect effect in _queuedEffects)
+            foreach (ResolvedEffect effect in ctx.AppliedEffects)
             {
-                ResolveEffect(effect);
+                state = ResolveEffect(state, effect);
                 if (effect.ForwardEffect != null)
                 {
-                    _forwardEffects.Add(effect.ForwardEffect);
+                    carryFwdEff.Add(effect.ForwardEffect);
                 }
             }
 
-            _queuedEffects.Clear();
-
-            return GetCombatantState();
+            return ctx with { CombatantState = state, CarryForwardEffects = carryFwdEff, AppliedEffects = Array.Empty<ResolvedEffect>() };
         }
 
-        private void ResolveEffect(ResolvedEffect effect)
+        public CombatantBattleContext CarryForwardEffects(CombatantBattleContext ctx)
         {
-            switch (effect.EffectedAttribute)
-            {
-                case EffectedAttribute.HEALTH:
-                    RemainingHealth += effect.ResolvedMagnitude;
-                    break;
-                case EffectedAttribute.INTELLECT:
-                    Intellect += effect.ResolvedMagnitude;
-                    break;
-                case EffectedAttribute.STRENGTH:
-                    Strength += effect.ResolvedMagnitude;
-                    break;
-                case EffectedAttribute.SPEED:
-                    Speed += effect.ResolvedMagnitude;
-                    break;
-            }
+            return ctx with { AppliedEffects = ctx.CarryForwardEffects, CarryForwardEffects = Array.Empty<ResolvedEffect>() };
         }
-
-        public CombatantState GetCombatantState()
+     
+        private CombatantState ResolveEffect(CombatantState state, ResolvedEffect effect)
         {
-            CombatantState combatantState = new CombatantState()
+            CombatantState resolvedState = state with
             {
-                TotalHealth = TotalHealth,
-                RemainingHealth = RemainingHealth,
-                Intellect = Intellect,
-                Speed = Speed,
-                Strength = Strength,               
+                RemainingHealth = effect.EffectedAttribute == EffectedAttribute.HEALTH ? state.RemainingHealth += effect.ResolvedMagnitude : state.RemainingHealth,
+                Strength = effect.EffectedAttribute == EffectedAttribute.STRENGTH ? state.Strength += effect.ResolvedMagnitude : state.Strength,
+                Intellect = effect.EffectedAttribute == EffectedAttribute.INTELLECT ? state.Intellect += effect.ResolvedMagnitude : state.Intellect,
+                Speed = effect.EffectedAttribute == EffectedAttribute.SPEED ? state.Speed += effect.ResolvedMagnitude : state.Speed,
             };
 
-            return combatantState;
-        }
-
-        public void CarryForwardEffects()
-        {
-            _queuedEffects.AddRange(_forwardEffects);
-            _forwardEffects.Clear();
+            return resolvedState;
         }
     }
 }

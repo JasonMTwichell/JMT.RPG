@@ -13,12 +13,12 @@ namespace JMT.RPG.Test
             _defaultTarget = defaultTarget;
         }
 
-        public async Task<CombatInputResult> GetInput(CombatContext context)
+        public async Task<CombatInputResult> GetInput(CombatInputContext ctx)
         {
             return new CombatInputResult()
             {
-                ChosenAbilityId = _defaultAbility,
-                TargetId = _defaultTarget,
+                ChosenAbilityID = _defaultAbility,
+                TargetID = _defaultTarget,
             };
         }
     }

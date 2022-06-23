@@ -1,49 +1,27 @@
-﻿using JMT.RPG.Combat;
-using JMT.RPG.Core.Contracts.Combat;
+﻿using JMT.RPG.Core.Contracts.Combat;
 
 namespace JMT.RPG.Combat
 {
     public class CombatAbilityManager: ICombatAbilityManager
     {
-        private IEnumerable<CombatAbility> _combatAbilities;
-        public CombatAbilityManager(IEnumerable<CombatAbility> combatAbilities)
+        public void ApplyCooldown(CombatAbility combatAbility, int coolDown)
         {
-            _combatAbilities = combatAbilities;
-        }
-
-        public IEnumerable<CombatAbility> GetCombatAbilities()
-        {
-            return _combatAbilities;
-        }
-
-        public void ApplyCooldownAllAbilities(int coolDown)
-        {
-            foreach(CombatAbility ability in _combatAbilities)
-            {
-                ability.RemainingCooldown = Math.Max(0, ability.RemainingCooldown += coolDown);
-            }
-        }
-        public void ApplyCooldown(string combatAbilityID, int coolDown)
-        {
-            CombatAbility ability = _combatAbilities.First(ca => ca.CombatAbilityId == combatAbilityID);
-            ability.RemainingCooldown = Math.Max(0, ability.RemainingCooldown += coolDown); 
+            combatAbility.RemainingCooldown = Math.Max(0, combatAbility.RemainingCooldown += coolDown);
         }
 
         public IEnumerable<ResolvedEffect> ResolveCombatAbility(CombatAbilityResolutionContext resCtx)
         {
-            CombatAbility ability = _combatAbilities.First(ca => ca.CombatAbilityId == resCtx.CombatAbilityID);
+            if (resCtx.CombatAbility.RemainingCooldown > 0) throw new AbilityCooldownException(string.Format("Ability is still on cooldown, it will be ready in {0} turns.", resCtx.CombatAbility.RemainingCooldown));
 
-            if (ability.RemainingCooldown > 0) throw new AbilityCooldownException(string.Format("Ability is still on cooldown, it will be ready in {0} turns.", ability.RemainingCooldown));
-            
-            ability.RemainingCooldown = ability.Cooldown;
+            ApplyCooldown(resCtx.CombatAbility, resCtx.CombatAbility.Cooldown);
 
             // apply stats and armor influence to effects
-            foreach (CombatEffect combatEffect in ability.Effects)
+            foreach (CombatEffect combatEffect in resCtx.CombatAbility.Effects)
             {
                 CombatEffectResolutionContext effResCtx = new CombatEffectResolutionContext()
                 {
                     CombatEffect = combatEffect,
-                    TargetId = resCtx.TargetId,
+                    TargetId = resCtx.TargetID,
                     Strength = resCtx.Strength,
                     Intellect = resCtx.Intellect,
                     Speed = resCtx.Speed,

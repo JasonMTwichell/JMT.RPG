@@ -2,6 +2,6 @@
 {
     public interface ICombatInputHandler
     {
-        Task<CombatInputResult> GetInput(CombatContext ctx);
+        Task<CombatInputResult> GetInput(CombatInputContext ctx);
     }
 }

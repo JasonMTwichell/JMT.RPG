@@ -5,8 +5,7 @@ namespace JMT.RPG.Core.Contracts.Combat
 {
     public record CombatEncounterContext
     {
-        public IEnumerable<CombatantContext> EnemyPartyCombatants { get; set; }
-        public IEnumerable<CombatantContext> PlayerPartyCombatants { get; set; }
+        public IEnumerable<CombatantContext> Combatants { get; set; }
         public IEnumerable<CombatItem> PlayerPartyCombatItems { get; set; }
 
     }
