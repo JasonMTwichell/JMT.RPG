@@ -7,12 +7,12 @@ using JMT.RPG.Core.Game.Domain;
 
 namespace JMT.RPG.Core.Contracts.Combat
 {
-    public class CombatItem
+    public record CombatItem
     {
-        public string CombatItemID { get; set; }
-        public string CombatItemName { get; set; }
-        public string CombatItemDescription { get; set; }
-        public string CombatItemFlavorText { get; set; }
-        public IEnumerable<CombatEffect> Effects { get; set; }
+        public string CombatItemID { get; init; }
+        public string CombatItemName { get; init; }
+        public string CombatItemDescription { get; init; }
+        public string CombatItemFlavorText { get; init; }
+        public IEnumerable<CombatEffect> Effects { get; init; }
     }
 }

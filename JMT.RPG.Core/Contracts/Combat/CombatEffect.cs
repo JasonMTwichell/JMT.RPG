@@ -8,10 +8,10 @@ namespace JMT.RPG.Core.Contracts.Combat
 {
     public record CombatEffect
     {
-        public string EffectedAttribute { get; set; }
-        public string EffectType { get; set; }
-        public int Magnitude { get; set; }
-        public int MagnitudeFactor { get; set; } // -1 to do damage for example
-        public CombatEffect ForwardEffect { get; set; }
+        public string EffectedAttribute { get; init; }
+        public string EffectType { get; init; }
+        public int Magnitude { get; init; }
+        public int MagnitudeFactor { get; init; } // all calcs are += so -1 to do damage for example
+        public CombatEffect ForwardEffect { get; init; }
     }
 }

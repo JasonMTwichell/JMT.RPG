@@ -2,9 +2,9 @@
 {
     public record ResolvedEffect
     {
-        public string TargetID { get; set; }
-        public string EffectedAttribute { get; set; }
-        public int ResolvedMagnitude { get; set; }
-        public ResolvedEffect? ForwardEffect { get; set; }
+        public string TargetID { get; init; }
+        public string EffectedAttribute { get; init; }
+        public int ResolvedMagnitude { get; init; }
+        public ResolvedEffect? ForwardEffect { get; init; }
     }
 }

@@ -66,6 +66,9 @@ namespace JMT.RPG.Combat
                     };
                     
                     IEnumerable<ResolvedEffect> resolvedEffects = _abilityMgr.ResolveCombatAbility(abilityResCtx).ToArray();
+                    chosenAbility = _abilityMgr.ApplyCooldown(chosenAbility, chosenAbility.Cooldown);
+                    combatant.CombatAbilities.RemoveAll(ca => ca.CombatAbilityID == chosenAbility.CombatAbilityID);
+                    combatant.CombatAbilities.Add(chosenAbility);
 
                     // distribute them to their targets
                     foreach (Combatant targetedCombatant in combatants)
@@ -128,7 +131,7 @@ namespace JMT.RPG.Combat
                 Strength = ctx.Strength,
                 Intellect = ctx.Intellect,
                 Speed = ctx.Speed,
-                CombatAbilities = ctx.CombatAbilities,
+                CombatAbilities = ctx.CombatAbilities.ToList(),
                 AppliedEffects = new List<ResolvedEffect>(),
                 CarryForwardEffects = new List<ResolvedEffect>(),
             };

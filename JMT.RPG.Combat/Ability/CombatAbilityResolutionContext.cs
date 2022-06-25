@@ -4,11 +4,11 @@ namespace JMT.RPG.Combat.Ability
 {
     public record CombatAbilityResolutionContext
     {
-        public string TargetID { get; set; }
-        public int Strength { get; set; }
-        public int Intellect { get; set; }
-        public int Speed { get; set; }
-        public CombatAbility CombatAbility { get; set; }
+        public string TargetID { get; init; }
+        public int Strength { get; init; }
+        public int Intellect { get; init; }
+        public int Speed { get; init; }
+        public CombatAbility CombatAbility { get; init; }
 
     }
 }

@@ -39,10 +39,10 @@ namespace JMT.RPG.Combat.Effect
         {
             CombatantState resolvedState = state with
             {
-                RemainingHealth = effect.EffectedAttribute == EffectedAttribute.HEALTH ? state.RemainingHealth += effect.ResolvedMagnitude : state.RemainingHealth,
-                Strength = effect.EffectedAttribute == EffectedAttribute.STRENGTH ? state.Strength += effect.ResolvedMagnitude : state.Strength,
-                Intellect = effect.EffectedAttribute == EffectedAttribute.INTELLECT ? state.Intellect += effect.ResolvedMagnitude : state.Intellect,
-                Speed = effect.EffectedAttribute == EffectedAttribute.SPEED ? state.Speed += effect.ResolvedMagnitude : state.Speed,
+                RemainingHealth = effect.EffectedAttribute == EffectedAttribute.HEALTH ? state.RemainingHealth + effect.ResolvedMagnitude : state.RemainingHealth,
+                Strength = effect.EffectedAttribute == EffectedAttribute.STRENGTH ? state.Strength + effect.ResolvedMagnitude : state.Strength,
+                Intellect = effect.EffectedAttribute == EffectedAttribute.INTELLECT ? state.Intellect + effect.ResolvedMagnitude : state.Intellect,
+                Speed = effect.EffectedAttribute == EffectedAttribute.SPEED ? state.Speed + effect.ResolvedMagnitude : state.Speed,
             };
 
             return resolvedState;

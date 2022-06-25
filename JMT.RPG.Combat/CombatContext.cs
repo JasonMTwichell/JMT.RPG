@@ -5,7 +5,7 @@ namespace JMT.RPG.Combat
 {
     public record CombatContext
     {
-        public int TurnNumber { get; set; }
-        public CombatantState[] CombatantContexts { get; set; }        
+        public int TurnNumber { get; init; }
+        public CombatantState[] CombatantContexts { get; init; }        
     }
 }

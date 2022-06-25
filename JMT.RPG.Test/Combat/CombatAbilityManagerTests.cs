@@ -77,8 +77,9 @@ namespace JMT.RPG.Test.Combat
             ICombatAbilityManager abilityManager = new CombatAbilityManager();
 
             ResolvedEffect[] resolvedEffect = abilityManager.ResolveCombatAbility(ctx).ToArray();
+            CombatAbility cdAbility = abilityManager.ApplyCooldown(ctx.CombatAbility, ctx.CombatAbility.Cooldown);
             
-            Assert.AreEqual(3, ctx.CombatAbility.RemainingCooldown);            
+            Assert.AreEqual(3, cdAbility.RemainingCooldown);            
         }
 
         [TestMethod]
@@ -142,8 +143,8 @@ namespace JMT.RPG.Test.Combat
 
             ICombatAbilityManager abilityManager = new CombatAbilityManager();
             
-            abilityManager.ApplyCooldown(ctx.CombatAbility, -2);
-            Assert.IsTrue(ctx.CombatAbility.RemainingCooldown == 1);
+            CombatAbility cdAbility = abilityManager.ApplyCooldown(ctx.CombatAbility, -2);
+            Assert.IsTrue(cdAbility.RemainingCooldown == 1);
         }
     }
 }

@@ -15,7 +15,7 @@ namespace JMT.RPG.Combat.Combatants
         public int TotalHealth { get; set; }
         public int RemainingHealth { get; set; }
         public bool IsEnemyCombatant { get; set; }
-        public IEnumerable<CombatAbility> CombatAbilities { get; set; } // TODO: NEED A DTO TO BREAK THE DEPENDENCY ON CORE
+        public List<CombatAbility> CombatAbilities { get; set; } // TODO: NEED A DTO TO BREAK THE DEPENDENCY ON CORE
         public List<ResolvedEffect> AppliedEffects { get; set; }
         public List<ResolvedEffect> CarryForwardEffects { get; set; }
         #endregion
@@ -50,7 +50,7 @@ namespace JMT.RPG.Combat.Combatants
             Strength = combatantContext.CombatantState.Strength;
             Intellect = combatantContext.CombatantState.Intellect;
             Speed = combatantContext.CombatantState.Speed;
-            CombatAbilities = combatantContext.CombatAbilities.ToArray();
+            CombatAbilities = combatantContext.CombatAbilities.ToList();
             AppliedEffects = combatantContext.AppliedEffects.ToList();
             CarryForwardEffects = combatantContext.CarryForwardEffects.ToList();
         }

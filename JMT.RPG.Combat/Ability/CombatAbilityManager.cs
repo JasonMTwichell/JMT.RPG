@@ -5,16 +5,21 @@ namespace JMT.RPG.Combat.Ability
 {
     public class CombatAbilityManager : ICombatAbilityManager
     {
-        public void ApplyCooldown(CombatAbility combatAbility, int coolDown)
+        public CombatAbility ApplyCooldown(CombatAbility combatAbility, int coolDown)
         {
-            combatAbility.RemainingCooldown = Math.Max(0, combatAbility.RemainingCooldown += coolDown);
+            CombatAbility cdAbility = combatAbility with
+            {
+                RemainingCooldown = Math.Max(0, (combatAbility.RemainingCooldown + coolDown)),
+            };
+
+            return cdAbility;
         }
 
         public IEnumerable<ResolvedEffect> ResolveCombatAbility(CombatAbilityResolutionContext resCtx)
         {
             if (resCtx.CombatAbility.RemainingCooldown > 0) throw new AbilityCooldownException(string.Format("Ability is still on cooldown, it will be ready in {0} turns.", resCtx.CombatAbility.RemainingCooldown));
 
-            ApplyCooldown(resCtx.CombatAbility, resCtx.CombatAbility.Cooldown);
+            //ApplyCooldown(resCtx.CombatAbility, resCtx.CombatAbility.Cooldown);
 
             // apply stats and armor influence to effects
             foreach (CombatEffect combatEffect in resCtx.CombatAbility.Effects)

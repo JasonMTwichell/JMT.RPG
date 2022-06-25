@@ -4,10 +4,10 @@ namespace JMT.RPG.Combat.Combatants
 {
     public record CombatantState
     {
-        public int TotalHealth { get; set; }
-        public int RemainingHealth { get; set; }
-        public int Intellect { get; set; }
-        public int Strength { get; set; }
-        public int Speed { get; set; }
+        public int TotalHealth { get; init; }
+        public int RemainingHealth { get; init; }
+        public int Intellect { get; init; }
+        public int Strength { get; init; }
+        public int Speed { get; init; }
     }
 }

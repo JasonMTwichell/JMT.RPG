@@ -6,6 +6,6 @@ namespace JMT.RPG.Combat.Ability
     public interface ICombatAbilityManager
     {
         IEnumerable<ResolvedEffect> ResolveCombatAbility(CombatAbilityResolutionContext resCtx);
-        void ApplyCooldown(CombatAbility combatAbility, int coolDown); //gets added so use negative to reduce
+        CombatAbility ApplyCooldown(CombatAbility combatAbility, int coolDown); //gets added so use negative to reduce
     }
 }
