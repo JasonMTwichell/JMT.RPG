@@ -1,200 +1,180 @@
+using System;
+using System.Threading.Tasks;
 using JMT.RPG.Combat;
+using JMT.RPG.Combat.Ability;
+using JMT.RPG.Combat.Effect;
 using JMT.RPG.Core.Contracts.Combat;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Threading.Tasks;
 
 namespace JMT.RPG.Test.Combat
 {
-    //[TestClass]
-    //public class CombatManagerTests
-    //{
-    //    [TestMethod]
-    //    public async Task TestCombat()
-    //    {
-    //        Combatant[] playerParty = new Combatant[]
-    //        {
-    //            new Combatant(
-    //                new DummyCombatInputHandler("1", "2"),
-    //                new CombatAbilityManager(new CombatAbility[]
-    //                {
-    //                    new CombatAbility()
-    //                    {
-    //                        CombatAbilityID = "1",
-    //                        Name = "TEST ABILITY",
-    //                        Description = "TEST ABILITY",
-    //                        Cooldown = 0,
-    //                        RemainingCooldown = 0,
-    //                        Effects = new CombatEffect[]
-    //                        {
-    //                            new CombatEffect()
-    //                            {
-    //                                EffectedAttribute = "HEALTH",
-    //                                EffectType = EffectType.PHYSICAL,
-    //                                Magnitude = 0,
-    //                                MagnitudeFactor = -1,
-    //                            }
-    //                        }
-    //                    }
-    //                }),
-    //                new CombatantStateManager()
-    //                {
-    //                    TotalHealth = 100,
-    //                    RemainingHealth = 100,
-    //                    Strength = 10,
-    //                    Intellect = 10,
-    //                    Speed = 10,
-    //                })
-    //            {
-    //                CombatantID = "1",                    
-    //                Name = "TEST PLAYER",
-    //            }
-    //        };
+    [TestClass]
+    public class CombatManagerTests
+    {
+        [TestMethod]
+        public async Task TestCombat()
+        {
+            ICombatInputHandler io = new DummyCombatInputHandler("1");
+            ICombatAbilityManager abilityMgr = new CombatAbilityManager();
+            IResolvedEffectManager effMgr = new ResolvedEffectManager();
+            CombatManager combatManager = new CombatManager(io, abilityMgr, effMgr);
+            CombatEncounterContext ctx = new CombatEncounterContext()
+            {
+                Combatants = new CombatantContext[]
+                {
+                    new CombatantContext()
+                    {
+                        CombatantID = "1",
+                        IsEnemyCombatant = false,
+                        TotalHealth = 100,
+                        RemainingHealth = 100,
+                        Strength = 10,
+                        Intellect = 10,
+                        Speed = 10,
+                        CombatAbilities = new CombatAbility[]
+                        {
+                            new CombatAbility()
+                            {
+                                CombatAbilityID = "1",
+                                Cooldown = 0,
+                                RemainingCooldown = 0,
+                                Effects = new CombatEffect[]
+                                {
+                                    new CombatEffect()
+                                    {
+                                        EffectedAttribute = EffectedAttribute.HEALTH,
+                                        EffectType = EffectType.PHYSICAL,
+                                        Magnitude = 10,
+                                        MagnitudeFactor = -1,
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    new CombatantContext()
+                    {
+                        CombatantID = "2",
+                        IsEnemyCombatant = true,
+                        TotalHealth = 100,
+                        RemainingHealth = 100,
+                        Strength = 0,
+                        Intellect = 10,
+                        Speed = 10,
+                        CombatAbilities = new CombatAbility[]
+                        {
+                            new CombatAbility()
+                            {
+                                CombatAbilityID = "1",
+                                Cooldown = 0,
+                                RemainingCooldown = 0,
+                                Effects = new CombatEffect[]
+                                {
+                                    new CombatEffect()
+                                    {
+                                        EffectedAttribute = EffectedAttribute.HEALTH,
+                                        EffectType = EffectType.PHYSICAL,
+                                        Magnitude = 0,
+                                        MagnitudeFactor = 1,
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                PlayerPartyCombatItems = Array.Empty<CombatItem>(),
+            };
 
-    //        Combatant[] enemyParty = new Combatant[]
-    //        {
-    //            new Combatant(
-    //                new DummyCombatInputHandler("2", "2"),
-    //                new CombatAbilityManager(new CombatAbility[]
-    //                    {
-    //                        new CombatAbility()
-    //                        {
-    //                            CombatAbilityID = "2",
-    //                            Name = "TEST ABILITY",
-    //                            Description = "TEST ABILITY",
-    //                            Cooldown = 0,
-    //                            RemainingCooldown = 0,
-    //                            Effects = new CombatEffect[]
-    //                            {
-    //                                new CombatEffect()
-    //                                {
-    //                                    EffectedAttribute = EffectedAttribute.HEALTH,
-    //                                    EffectType = EffectType.PHYSICAL,
-    //                                    MagnitudeFactor = -1,
-    //                                    Magnitude = 1,
-    //                                }
-    //                            }
-    //                        }
-    //                    }),
-    //                new CombatantStateManager()
-    //                {
-    //                    Speed = 1,
-    //                    Strength = 1,
-    //                    Intellect = 1,
-    //                    TotalHealth = 50,
-    //                    RemainingHealth= 50,
-    //                }
-    //            )
-    //            {
-    //                    CombatantID = "2",
-    //                    Name = "TEST ENEMY",                        
-                       
-    //            }
-    //        };
+            CombatResult result = await combatManager.PerformCombat(ctx);
 
-    //        CombatManager combatManager = new CombatManager(playerParty, enemyParty);
+            // player is doing 10 damage per turn to 50 hp enemy 
+            Assert.AreEqual(5, result.FinalTurnNum);
+        }
 
-    //        CombatResult result = await combatManager.PerformCombat();
+        [TestMethod]
+        public async Task TestCombat_Carryforward()
+        {
+            ICombatInputHandler io = new DummyCombatInputHandler("1");
+            ICombatAbilityManager abilityMgr = new CombatAbilityManager();
+            IResolvedEffectManager effMgr = new ResolvedEffectManager();
+            CombatManager combatManager = new CombatManager(io, abilityMgr, effMgr);
+            CombatEncounterContext ctx = new CombatEncounterContext()
+            {
+                Combatants = new CombatantContext[]
+                {
+                    new CombatantContext()
+                    {
+                        CombatantID = "1",
+                        IsEnemyCombatant = false,
+                        TotalHealth = 100,
+                        RemainingHealth = 100,
+                        Strength = 10,
+                        Intellect = 10,
+                        Speed = 10,
+                        CombatAbilities = new CombatAbility[]
+                        {
+                            new CombatAbility()
+                            {
+                                CombatAbilityID = "1",
+                                Cooldown = 0,
+                                RemainingCooldown = 0,
+                                Effects = new CombatEffect[]
+                                {
+                                    new CombatEffect()
+                                    {
+                                        EffectedAttribute = EffectedAttribute.HEALTH,
+                                        EffectType = EffectType.PHYSICAL,
+                                        Magnitude = 0,
+                                        MagnitudeFactor = -1,
+                                        ForwardEffect = new CombatEffect()
+                                        {
+                                            EffectedAttribute = EffectedAttribute.HEALTH,
+                                            EffectType = EffectType.PHYSICAL,
+                                            Magnitude = 0,
+                                            MagnitudeFactor = -1,
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    new CombatantContext()
+                    {
+                        CombatantID = "2",
+                        IsEnemyCombatant = true,
+                        TotalHealth = 100,
+                        RemainingHealth = 50,
+                        Strength = 0,
+                        Intellect = 10,
+                        Speed = 10,
+                        CombatAbilities = new CombatAbility[]
+                        {
+                            new CombatAbility()
+                            {
+                                CombatAbilityID = "1",
+                                Cooldown = 0,
+                                RemainingCooldown = 0,
+                                Effects = new CombatEffect[]
+                                {
+                                    new CombatEffect()
+                                    {
+                                        EffectedAttribute = EffectedAttribute.HEALTH,
+                                        EffectType = EffectType.PHYSICAL,
+                                        Magnitude = 0,
+                                        MagnitudeFactor = 1,
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                PlayerPartyCombatItems = Array.Empty<CombatItem>(),
+            };
 
-    //        // player is doing 10 damage per turn to 50 hp enemy 
-    //        Assert.AreEqual(5, result.FinalTurnNum);
-    //    }
+            CombatResult result = await combatManager.PerformCombat(ctx);
 
-    //    [TestMethod]
-    //    public async Task TestCombat_ForwardEffect()
-    //    {
-    //        Combatant[] playerParty = new Combatant[]
-    //    {
-    //            new Combatant(
-    //                new DummyCombatInputHandler("1", "2"),
-    //                new CombatAbilityManager(new CombatAbility[]
-    //                {
-    //                    new CombatAbility()
-    //                    {
-    //                        CombatAbilityID = "1",
-    //                        Name = "TEST ABILITY",
-    //                        Description = "TEST ABILITY",
-    //                        Cooldown = 0,
-    //                        RemainingCooldown = 0,
-    //                        Effects = new CombatEffect[]
-    //                        {
-    //                            new CombatEffect()
-    //                            {
-    //                                EffectedAttribute = "HEALTH",
-    //                                EffectType = EffectType.PHYSICAL,
-    //                                Magnitude = 0,
-    //                                MagnitudeFactor = -1,
-    //                                ForwardEffect = new CombatEffect()
-    //                                {
-    //                                    EffectedAttribute = "HEALTH",
-    //                                    EffectType = EffectType.PHYSICAL,
-    //                                    Magnitude = 0,
-    //                                    MagnitudeFactor = -1,
-    //                                },
-    //                            }
-    //                        }
-    //                    }
-    //                }),
-    //                new CombatantStateManager()
-    //                {
-    //                    TotalHealth = 100,
-    //                    RemainingHealth = 100,
-    //                    Strength = 10,
-    //                    Intellect = 10,
-    //                    Speed = 10,
-    //                }
-    //            )
-    //            {
-    //                CombatantID = "1",                    
-    //                Name = "TEST PLAYER",                    
-    //            }
-    //    };
+            // player is doing 10 damage per turn to 50 hp enemy 
+            Assert.AreEqual(3, result.FinalTurnNum);
+        }
 
-    //        Combatant[] enemyParty = new Combatant[]
-    //         {
-    //            new Combatant(
-    //                new DummyCombatInputHandler("2", "2"),
-    //                new CombatAbilityManager(new CombatAbility[]
-    //                {
-    //                    new CombatAbility()
-    //                    {
-    //                        CombatAbilityID = "2",
-    //                        Name = "TEST ABILITY",
-    //                        Description = "TEST ABILITY",
-    //                        Cooldown = 0,
-    //                        RemainingCooldown = 0,
-    //                        Effects = new CombatEffect[]
-    //                        {
-    //                            new CombatEffect()
-    //                            {
-    //                                EffectedAttribute = EffectedAttribute.HEALTH,
-    //                                EffectType = EffectType.PHYSICAL,
-    //                                MagnitudeFactor = -1,
-    //                                Magnitude = 1,
-    //                            }
-    //                        }
-    //                    }
-    //                }),
-    //                new CombatantStateManager()
-    //                {
-    //                    Speed = 1,
-    //                    Strength = 1,
-    //                    Intellect = 1,
-    //                    TotalHealth = 50,
-    //                    RemainingHealth= 50,
-    //                }
-    //            )
-    //            {
-    //                    CombatantID = "2",
-    //                    Name = "TEST ENEMY",                                               
-    //            }
-    //         };
-
-    //        CombatManager combatManager = new CombatManager(playerParty, enemyParty);
-
-    //        CombatResult result = await combatManager.PerformCombat();
-
-    //        // player is doing 10 damage first turn, then 20 the next two
-    //        Assert.AreEqual(3, result.FinalTurnNum);
-    //    }
-    //}
+    }
 }

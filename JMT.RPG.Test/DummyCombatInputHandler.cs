@@ -6,19 +6,18 @@ namespace JMT.RPG.Test
     internal class DummyCombatInputHandler : ICombatInputHandler
     {
         private string _defaultAbility;
-        private string _defaultTarget;
-        public DummyCombatInputHandler(string defaultAbility, string defaultTarget) 
+        public DummyCombatInputHandler(string defaultAbility) 
         {
             _defaultAbility = defaultAbility;
-            _defaultTarget = defaultTarget;
         }
 
         public async Task<CombatInputResult> GetInput(CombatInputContext ctx)
         {
             return new CombatInputResult()
             {
+                CombatantID = ctx.CombatantID,
                 ChosenAbilityID = _defaultAbility,
-                TargetID = _defaultTarget,
+                TargetID = ctx.CombatantID == "1" ? "2":"1",
             };
         }
     }

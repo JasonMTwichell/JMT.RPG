@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using JMT.RPG.Combat.Effect;
 using JMT.RPG.Core.Contracts.Combat;
 
-namespace JMT.RPG.Combat
+namespace JMT.RPG.Combat.Combatants
 {
     public record CombatantBattleContext
     {

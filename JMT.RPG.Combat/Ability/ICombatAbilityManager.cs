@@ -1,8 +1,7 @@
-﻿using JMT.RPG.Combat;
-using JMT.RPG.Combat;
+﻿using JMT.RPG.Combat.Effect;
 using JMT.RPG.Core.Contracts.Combat;
 
-namespace JMT.RPG.Combat
+namespace JMT.RPG.Combat.Ability
 {
     public interface ICombatAbilityManager
     {

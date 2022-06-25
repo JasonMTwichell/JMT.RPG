@@ -1,8 +1,9 @@
-﻿using JMT.RPG.Core.Contracts.Combat;
+﻿using JMT.RPG.Combat.Effect;
+using JMT.RPG.Core.Contracts.Combat;
 
-namespace JMT.RPG.Combat
+namespace JMT.RPG.Combat.Combatants
 {
-    public class Combatant: ICombatant
+    public class Combatant : ICombatant
     {
         #region Stats
         public string CombatantID { get; init; }

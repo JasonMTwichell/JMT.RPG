@@ -1,4 +1,6 @@
-﻿using JMT.RPG.Combat;
+﻿using JMT.RPG.Combat.Ability;
+using JMT.RPG.Combat.Combatants;
+using JMT.RPG.Combat.Effect;
 using JMT.RPG.Core.Contracts.Combat;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
@@ -10,7 +12,7 @@ using System.Threading.Tasks;
 namespace JMT.RPG.Test.Combat
 {
     [TestClass]
-    public class CombatantStateManagerTests
+    public class ResolvedEffectManagerTests
     {
         [TestMethod]
         public void TestEffectsAppliedToState()

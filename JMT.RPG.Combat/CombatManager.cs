@@ -1,4 +1,7 @@
-﻿using JMT.RPG.Core.Contracts.Combat;
+﻿using JMT.RPG.Combat.Ability;
+using JMT.RPG.Combat.Combatants;
+using JMT.RPG.Combat.Effect;
+using JMT.RPG.Core.Contracts.Combat;
 
 namespace JMT.RPG.Combat
 {
@@ -17,7 +20,9 @@ namespace JMT.RPG.Combat
         public async Task<CombatResult> PerformCombat(CombatEncounterContext combatEncounterCtx)
         {
             // map to combat classes
-            Combatant[] combatants = combatEncounterCtx.Combatants.Select(ctx => MapCombatantContext(ctx)).ToArray();
+            Combatant[] combatants = combatEncounterCtx.Combatants.Select(ctx => MapCombatantContext(ctx))
+                                                                  .OrderByDescending(c => c.Speed)
+                                                                  .ToArray();
 
             int turnNumber = 0;
             bool combatConcluded = false;
@@ -28,7 +33,7 @@ namespace JMT.RPG.Combat
                 StartOfTurnPhase(combatants);
 
                 // each combatant takes their turn selecting and applying their action
-                foreach (Combatant combatant in combatants.OrderByDescending(c => c.Speed).ToArray())
+                foreach (Combatant combatant in combatants)
                 {
                     CombatInputResult combatantInput = await _inputHandler.GetInput(new CombatInputContext()
                     {
@@ -50,7 +55,7 @@ namespace JMT.RPG.Combat
                     });
 
                     // resolve the ability and apply cooldown
-                    CombatAbility chosenAbility = combatant.CombatAbilities.First(c => c.CombatAbilityID == combatantInput.CombatantID);
+                    CombatAbility chosenAbility = combatant.CombatAbilities.First(c => c.CombatAbilityID == combatantInput.ChosenAbilityID);
                     CombatAbilityResolutionContext abilityResCtx = new CombatAbilityResolutionContext()
                     {
                         TargetID = combatantInput.TargetID,
@@ -60,13 +65,13 @@ namespace JMT.RPG.Combat
                         CombatAbility = chosenAbility,
                     };
                     
-                    IEnumerable<ResolvedEffect> resolvedEffects = _abilityMgr.ResolveCombatAbility(abilityResCtx);
+                    IEnumerable<ResolvedEffect> resolvedEffects = _abilityMgr.ResolveCombatAbility(abilityResCtx).ToArray();
 
                     // distribute them to their targets
                     foreach (Combatant targetedCombatant in combatants)
                     {
-                        ResolvedEffect[] targetingEffects = resolvedEffects.ToArray().Where(e => e.TargetID == targetedCombatant.CombatantID).ToArray();
-                        CombatantBattleContext ctx = _effMgr.ApplyEffects(combatant.GetCombatantBattleContext(), targetingEffects);
+                        ResolvedEffect[] targetingEffects = resolvedEffects.Where(e => e.TargetID == targetedCombatant.CombatantID)?.ToArray();
+                        CombatantBattleContext ctx = _effMgr.ApplyEffects(targetedCombatant.GetCombatantBattleContext(), targetingEffects);
                         targetedCombatant.ApplyCombatantBattleContext(ctx);
                     }
 
@@ -129,18 +134,18 @@ namespace JMT.RPG.Combat
             };
         }
 
-        private void ActionResolutionPhase(IEnumerable<Combatant> combatants)
+        private void StartOfTurnPhase(IEnumerable<Combatant> combatants)
         {
-            foreach (Combatant combatant in combatants)
+            foreach(Combatant combatant in combatants)
             {
                 CombatantBattleContext ctx = _effMgr.ResolveAppliedEffects(combatant.GetCombatantBattleContext());
                 combatant.ApplyCombatantBattleContext(ctx);
             }
         }
 
-        private void StartOfTurnPhase(IEnumerable<Combatant> combatants)
+        private void ActionResolutionPhase(IEnumerable<Combatant> combatants)
         {
-            foreach(Combatant combatant in combatants)
+            foreach (Combatant combatant in combatants)
             {
                 CombatantBattleContext ctx = _effMgr.ResolveAppliedEffects(combatant.GetCombatantBattleContext());
                 combatant.ApplyCombatantBattleContext(ctx);
@@ -158,7 +163,7 @@ namespace JMT.RPG.Combat
         
         private bool CheckCombatConcluded(IEnumerable<Combatant> combatants)
         {
-            return combatants.Where(c => c.IsEnemyCombatant).All(ec => ec.RemainingHealth <= 0) || combatants.Where(c => !c.IsEnemyCombatant).All(ec => ec.RemainingHealth <= 0);
+            return (combatants.Where(c => c.IsEnemyCombatant).All(ec => ec.RemainingHealth <= 0) || combatants.Where(c => !c.IsEnemyCombatant).All(ec => ec.RemainingHealth <= 0));
         }
     }
 }

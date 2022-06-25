@@ -1,4 +1,4 @@
-﻿namespace JMT.RPG.Combat
+﻿namespace JMT.RPG.Combat.Ability
 {
     public static class EffectType
     {

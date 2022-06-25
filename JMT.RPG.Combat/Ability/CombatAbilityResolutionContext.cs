@@ -1,7 +1,6 @@
-﻿using JMT.RPG.Combat;
-using JMT.RPG.Core.Contracts.Combat;
+﻿using JMT.RPG.Core.Contracts.Combat;
 
-namespace JMT.RPG.Combat
+namespace JMT.RPG.Combat.Ability
 {
     public record CombatAbilityResolutionContext
     {
@@ -10,6 +9,6 @@ namespace JMT.RPG.Combat
         public int Intellect { get; set; }
         public int Speed { get; set; }
         public CombatAbility CombatAbility { get; set; }
-        
+
     }
 }

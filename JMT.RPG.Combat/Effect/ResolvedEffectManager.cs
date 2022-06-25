@@ -1,6 +1,9 @@
-﻿namespace JMT.RPG.Combat
+﻿using JMT.RPG.Combat.Ability;
+using JMT.RPG.Combat.Combatants;
+
+namespace JMT.RPG.Combat.Effect
 {
-    public class CombatantStateManager : IResolvedEffectManager
+    public class ResolvedEffectManager : IResolvedEffectManager
     {
         public CombatantBattleContext ApplyEffects(CombatantBattleContext ctx, IEnumerable<ResolvedEffect> resolvedEffects)
         {
@@ -12,7 +15,7 @@
 
         public CombatantBattleContext ResolveAppliedEffects(CombatantBattleContext ctx)
         {
-            List<ResolvedEffect> carryFwdEff = new List<ResolvedEffect>();
+            List<ResolvedEffect> carryFwdEff = new List<ResolvedEffect>(ctx.CarryForwardEffects);
             CombatantState state = ctx.CombatantState;
 
             foreach (ResolvedEffect effect in ctx.AppliedEffects)
@@ -31,7 +34,7 @@
         {
             return ctx with { AppliedEffects = ctx.CarryForwardEffects, CarryForwardEffects = Array.Empty<ResolvedEffect>() };
         }
-     
+
         private CombatantState ResolveEffect(CombatantState state, ResolvedEffect effect)
         {
             CombatantState resolvedState = state with

@@ -1,11 +1,11 @@
-﻿using JMT.RPG.Combat;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using JMT.RPG.Combat.Combatants;
 
-namespace JMT.RPG.Combat
+namespace JMT.RPG.Combat.Effect
 {
     public interface IResolvedEffectManager
     {

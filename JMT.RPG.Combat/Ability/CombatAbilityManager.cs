@@ -1,8 +1,9 @@
-﻿using JMT.RPG.Core.Contracts.Combat;
+﻿using JMT.RPG.Combat.Effect;
+using JMT.RPG.Core.Contracts.Combat;
 
-namespace JMT.RPG.Combat
+namespace JMT.RPG.Combat.Ability
 {
-    public class CombatAbilityManager: ICombatAbilityManager
+    public class CombatAbilityManager : ICombatAbilityManager
     {
         public void ApplyCooldown(CombatAbility combatAbility, int coolDown)
         {
