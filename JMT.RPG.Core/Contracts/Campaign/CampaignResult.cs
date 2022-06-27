@@ -1,4 +1,4 @@
-﻿namespace JMT.RPG.Campaign
+﻿namespace JMT.RPG.Core.Contracts.Campaign
 {
     public class CampaignResult
     {

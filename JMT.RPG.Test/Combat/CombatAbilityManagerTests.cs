@@ -49,6 +49,47 @@ namespace JMT.RPG.Test.Combat
         }
 
         [TestMethod]
+        public void TestItemAbilityResolved()
+        {
+            CombatAbilityResolutionContext ctx = new CombatAbilityResolutionContext()
+            {
+                TargetID = "1",
+                Strength = 10,
+                Intellect = 10,
+                Speed = 10,
+                CombatAbility = new CombatAbility()
+                {
+                    Name = "FIRE BOMB",
+                    Description = "DEALS 10 DAMAGE",
+                    CombatAbilityID = "ITEM",
+                    Cooldown = 0,
+                    RemainingCooldown = 0,
+                    Effects = new CombatEffect[]
+                    {
+                        new CombatEffect()
+                        {
+                            EffectedAttribute = EffectedAttribute.HEALTH,
+                            EffectType = "ITEM",
+                            Magnitude = 10,
+                            MagnitudeFactor = -1
+                        }
+                    },
+                },
+            };
+
+            ICombatAbilityManager abilityManager = new CombatAbilityManager();
+
+            ResolvedEffect[] resolvedEffects = abilityManager.ResolveCombatAbility(ctx).ToArray();
+            Assert.AreEqual(1, resolvedEffects.Count());
+
+            ResolvedEffect resolvedEffect = resolvedEffects.First();
+            Assert.AreEqual(-10, resolvedEffect.ResolvedMagnitude);
+            Assert.AreEqual("1", resolvedEffect.TargetID);
+            Assert.AreEqual(EffectedAttribute.HEALTH, resolvedEffect.EffectedAttribute);
+            Assert.IsNull(resolvedEffect.ForwardEffect);
+        }
+
+        [TestMethod]
         public void TestRemainingCooldownApplied()
         {
             CombatAbilityResolutionContext ctx = new CombatAbilityResolutionContext()

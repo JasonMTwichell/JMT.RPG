@@ -19,6 +19,8 @@ namespace JMT.RPG.Combat
 
         public async Task<CombatResult> PerformCombat(CombatEncounterContext combatEncounterCtx)
         {
+            // track items
+            List<CombatItem> playerCombatItems = combatEncounterCtx.PlayerPartyCombatItems.ToList();
             // map to combat classes
             Combatant[] combatants = combatEncounterCtx.Combatants.Select(ctx => MapCombatantContext(ctx))
                                                                   .OrderByDescending(c => c.Speed)
@@ -55,20 +57,51 @@ namespace JMT.RPG.Combat
                     });
 
                     // resolve the ability and apply cooldown
-                    CombatAbility chosenAbility = combatant.CombatAbilities.First(c => c.CombatAbilityID == combatantInput.ChosenAbilityID);
-                    CombatAbilityResolutionContext abilityResCtx = new CombatAbilityResolutionContext()
+                    ResolvedEffect[] resolvedEffects = Array.Empty<ResolvedEffect>();
+                    if(!string.IsNullOrEmpty(combatantInput.ChoseItemID))
                     {
-                        TargetID = combatantInput.TargetID,
-                        Strength = combatant.Strength,
-                        Intellect = combatant.Intellect,
-                        Speed = combatant.Speed,
-                        CombatAbility = chosenAbility,
-                    };
-                    
-                    IEnumerable<ResolvedEffect> resolvedEffects = _abilityMgr.ResolveCombatAbility(abilityResCtx).ToArray();
-                    chosenAbility = _abilityMgr.ApplyCooldown(chosenAbility, chosenAbility.Cooldown);
-                    combatant.CombatAbilities.RemoveAll(ca => ca.CombatAbilityID == chosenAbility.CombatAbilityID);
-                    combatant.CombatAbilities.Add(chosenAbility);
+                        CombatItem chosenItem = playerCombatItems.FirstOrDefault(ci => ci.CombatItemID == combatantInput.ChoseItemID);
+
+                        // map to a combat ability for the mgr to resolve
+                        CombatAbilityResolutionContext abilityResCtx = new CombatAbilityResolutionContext()
+                        {
+                            TargetID = combatantInput.TargetID,
+                            Strength = combatant.Strength,
+                            Intellect = combatant.Intellect,
+                            Speed = combatant.Speed,
+                            CombatAbility = new CombatAbility()
+                            {
+                                CombatAbilityID = "ITEM",
+                                Cooldown = 0,
+                                RemainingCooldown = 0,
+                                Description = chosenItem.CombatItemDescription,
+                                Name = chosenItem.CombatItemName,
+                                Effects = chosenItem.Effects,
+                            },
+                        };
+
+                        resolvedEffects = _abilityMgr.ResolveCombatAbility(abilityResCtx).ToArray();
+
+                        // remove item from list of available options
+                        playerCombatItems.Remove(chosenItem);
+                    }
+                    else if (!string.IsNullOrEmpty(combatantInput.ChosenAbilityID))
+                    {
+                        CombatAbility chosenAbility = combatant.CombatAbilities.First(c => c.CombatAbilityID == combatantInput.ChosenAbilityID);
+                        CombatAbilityResolutionContext abilityResCtx = new CombatAbilityResolutionContext()
+                        {
+                            TargetID = combatantInput.TargetID,
+                            Strength = combatant.Strength,
+                            Intellect = combatant.Intellect,
+                            Speed = combatant.Speed,
+                            CombatAbility = chosenAbility,
+                        };
+
+                        resolvedEffects = _abilityMgr.ResolveCombatAbility(abilityResCtx).ToArray();
+                        chosenAbility = _abilityMgr.ApplyCooldown(chosenAbility, chosenAbility.Cooldown);
+                        combatant.CombatAbilities.RemoveAll(ca => ca.CombatAbilityID == chosenAbility.CombatAbilityID);
+                        combatant.CombatAbilities.Add(chosenAbility);
+                    }
 
                     // distribute them to their targets
                     foreach (Combatant targetedCombatant in combatants)
@@ -96,6 +129,7 @@ namespace JMT.RPG.Combat
                                     &&
                                  combatants.Where(c => !c.IsEnemyCombatant).Any(ec => ec.RemainingHealth >= 0),
                 PlayerPartyCombatants = combatants.Select(c => MapToCombatContext(c)).ToArray(),
+                RemainingPlayerPartyCombatItems = playerCombatItems,
             };
 
             return combatResult;

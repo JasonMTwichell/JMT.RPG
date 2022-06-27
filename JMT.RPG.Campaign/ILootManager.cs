@@ -1,7 +1,9 @@
-﻿namespace JMT.RPG.Campaign
+﻿using JMT.RPG.Core.Contracts.Campaign;
+
+namespace JMT.RPG.Campaign
 {
     public interface ILootManager
     {
-        IEnumerable<CampaignLoot> RollForLoot(CampaignEventLootTable lootTable, int numRolls);
+        IEnumerable<CampaignPartyItem> RollForLoot(CampaignEventLootTable lootTable, int numRolls);
     }
 }

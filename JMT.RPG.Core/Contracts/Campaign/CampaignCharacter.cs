@@ -1,6 +1,6 @@
 ﻿using JMT.RPG.Core.Contracts.Combat;
 
-namespace JMT.RPG.Campaign
+namespace JMT.RPG.Core.Contracts.Campaign
 {
     public class CampaignCharacter
     {

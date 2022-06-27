@@ -3,25 +3,25 @@ using System.Threading.Tasks;
 
 namespace JMT.RPG.Test
 {
-    internal class DummyCombatInputHandler : ICombatInputHandler
+    internal class DummyCombatItemInputHandler : ICombatInputHandler
     {
-        private string _defaultPlayerAbilityID;
+        private string _defaultPlayerItemID;
         private string _defaultEnemyAbilityID;
-        public DummyCombatInputHandler(string defaultPlayerAbilityID, string defaultEnemyAbilityID) 
+        public DummyCombatItemInputHandler(string defaultPlayerItemID, string defaultEnemyAbilityID)
         {
-            _defaultPlayerAbilityID = defaultPlayerAbilityID;
+            _defaultPlayerItemID = defaultPlayerItemID;
             _defaultEnemyAbilityID = defaultEnemyAbilityID;
         }
 
         public async Task<CombatInputResult> GetInput(CombatInputContext ctx)
         {
-            if(ctx.CombatantID == "PLAYER")
+            if (ctx.CombatantID == "PLAYER")
             {
                 return new CombatInputResult()
                 {
                     CombatantID = "PLAYER",
                     TargetID = "ENEMY",
-                    ChosenAbilityID = _defaultPlayerAbilityID,
+                    ChoseItemID = _defaultPlayerItemID,
                 };
             }
             else

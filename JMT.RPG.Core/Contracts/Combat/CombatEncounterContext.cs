@@ -7,6 +7,5 @@ namespace JMT.RPG.Core.Contracts.Combat
     {
         public IEnumerable<CombatantContext> Combatants { get; init; }
         public IEnumerable<CombatItem> PlayerPartyCombatItems { get; init; }
-
     }
 }

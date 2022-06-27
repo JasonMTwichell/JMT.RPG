@@ -30,7 +30,7 @@ namespace JMT.RPG.Combat.Ability
                     TargetId = resCtx.TargetID,
                     Strength = resCtx.Strength,
                     Intellect = resCtx.Intellect,
-                    Speed = resCtx.Speed,
+                    Speed = resCtx.Speed,                    
                 };
 
                 yield return BuildResolvedEffect(effResCtx);
@@ -82,6 +82,8 @@ namespace JMT.RPG.Combat.Ability
                     break;
                 case EffectType.AGILITY:
                     resolvedMagnitude += resCtx.Speed;
+                    break;
+                default:
                     break;
             }
 

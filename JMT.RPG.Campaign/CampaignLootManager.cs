@@ -1,18 +1,26 @@
-﻿namespace JMT.RPG.Campaign
+﻿using JMT.RPG.Core.Contracts.Campaign;
+
+namespace JMT.RPG.Campaign
 {
     public class CampaignLootManager : ILootManager
     {
-        public IEnumerable<CampaignLoot> RollForLoot(CampaignEventLootTable lootTable, int numRolls)
+        public IEnumerable<CampaignPartyItem> RollForLoot(CampaignEventLootTable lootTable, int numRolls)
         {
-            int minRoll = lootTable.Loot.Select(r => r.Key).Min();
-            int maxRoll = lootTable.Loot.Select(r => r.Key).Max();
-            Random random = new Random();            
+            int minRoll = 0;
+            int maxRoll = lootTable.Loot.Count();
+            Random random = new Random();
 
             for(int i = 0; i < numRolls; i++)
             {
-                int roll = random.Next(minRoll, maxRoll);
-                CampaignLoot? loot = lootTable.Loot.FirstOrDefault(l => l.Key == roll);
-                if (loot != null) yield return loot;
+                int lootIndex = random.Next(minRoll, maxRoll);
+                CampaignLoot loot = lootTable.Loot.ElementAt(lootIndex);
+                if(loot.CampaignPartyItem != null && loot.NumItemAwarded > 0)
+                {
+                    for(int l = 0; l < loot.NumItemAwarded; l++)
+                    {
+                        yield return loot.CampaignPartyItem;
+                    }
+                }
             }
         }
     }

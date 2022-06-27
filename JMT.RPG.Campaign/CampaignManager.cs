@@ -17,8 +17,10 @@ namespace JMT.RPG.Campaign
 
         public async Task<CampaignResult> PerformCampaign(CampaignContext campaignCtx)
         {
-            CampaignEvent[] sequencedEvents = campaignCtx.CampaignEvents.OrderBy(c => c.EventSequence).ToArray();
-            //Combatant[] playerParty = BuildPlayerCombatants(campaignCtx.PlayerParty.PlayerParty, campaignCtx.PlayerParty.CampaignPartyItems).ToArray();
+            int awardedCurrency = 0;
+            List<CampaignPartyItem> awardedItems = new List<CampaignPartyItem>();
+
+            CampaignEvent[] sequencedEvents = campaignCtx.CampaignEvents.OrderBy(c => c.EventSequence).ToArray();           
 
             foreach (CampaignEvent campaignEvent in sequencedEvents)
             {
@@ -33,16 +35,16 @@ namespace JMT.RPG.Campaign
                 {
                     CombatEncounterContext combatEncCtx = new CombatEncounterContext()
                     {
-                        // TODO: ADD STUFF HERE  
+                       
                     };
 
                     CombatResult combatResult = await _combatMgr.PerformCombat(combatEncCtx);
 
                     if(combatResult.PlayerPartyWon)
                     {
-                        CampaignLoot[] acquiredLoot = _lootMgr.RollForLoot(campaignEvent.LootTable, campaignEvent.NumberOfLootRolls).ToArray();
-                        campaignCtx.PlayerPartyItems.AddRange(acquiredLoot.SelectMany(al => al.CampaignPartyItems).ToArray());
-                        campaignCtx.PlayerPartyCurrency += campaignEvent.AwardedCurrency;                        
+                        CampaignPartyItem[] acquiredLoot = _lootMgr.RollForLoot(campaignEvent.LootTable, campaignEvent.NumberOfLootRolls).ToArray();
+                        awardedCurrency += campaignEvent.AwardedCurrency;
+                        awardedItems.AddRange(acquiredLoot);
                     }
                     else
                     {
@@ -65,8 +67,8 @@ namespace JMT.RPG.Campaign
             return new CampaignResult()
             {
                 CampaignCompleted = true,
-                PlayerPartyCurrency = campaignCtx.PlayerPartyCurrency,
-                PlayerPartyItems = campaignCtx.PlayerPartyItems,
+                PlayerPartyCurrency = awardedCurrency,
+                PlayerPartyItems = awardedItems,
             };
         }
 

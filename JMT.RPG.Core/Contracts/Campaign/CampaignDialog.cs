@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace JMT.RPG.Campaign
+namespace JMT.RPG.Core.Contracts.Campaign
 {
     public class CampaignDialog
     {
