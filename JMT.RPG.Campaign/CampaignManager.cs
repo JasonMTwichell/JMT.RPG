@@ -33,10 +33,7 @@ namespace JMT.RPG.Campaign
 
                 if(campaignEvent.IsCombatEvent)
                 {
-                    CombatEncounterContext combatEncCtx = new CombatEncounterContext()
-                    {
-                       
-                    };
+                    CombatEncounterContext combatEncCtx = MapCombatEncounterContext(campaignCtx, campaignEvent.EnemyParty.ToArray());
 
                     CombatResult combatResult = await _combatMgr.PerformCombat(combatEncCtx);
 
@@ -83,6 +80,70 @@ namespace JMT.RPG.Campaign
             {
                 await _inputHandler.GetInput(inputEvent);
             }
+        }
+
+        private CombatEncounterContext MapCombatEncounterContext(CampaignContext campCtx, IEnumerable<CampaignCharacter> enemyParty)
+        {
+            List<CombatantContext> combatantContexts = new List<CombatantContext>();
+            CombatantContext[] playerParty = campCtx.PlayerParty.Select(c => new CombatantContext()
+            {
+                CombatantID = c.Id,
+                Name = c.Name,
+                Level = c.Level,
+                IsEnemyCombatant = false,
+                TotalHealth = c.TotalHealth,
+                RemainingHealth = c.RemainingHealth,
+                Strength = c.Strength,
+                Speed = c.Speed,
+                Intellect = c.Intellect,
+                CombatAbilities = c.CombatAbilities.ToArray(),
+            }).ToArray();
+
+            CombatantContext[] enemyParyMapped = enemyParty.Select(e => new CombatantContext()
+            {
+                CombatantID = e.Id,
+                Name = e.Name,
+                Level = e.Level,
+                IsEnemyCombatant = true,
+                TotalHealth = e.TotalHealth,
+                RemainingHealth = e.RemainingHealth,
+                Strength = e.Strength,
+                Speed = e.Speed,
+                Intellect = e.Intellect,
+                CombatAbilities = e.CombatAbilities.ToArray(),
+            }).ToArray();
+
+            combatantContexts.AddRange(playerParty);
+            combatantContexts.AddRange(enemyParyMapped);
+
+            CombatItem[] combatItems = campCtx.PlayerPartyItems.Select(ppi => new CombatItem()
+            {
+                CombatItemID = ppi.ItemID,
+                CombatItemName = ppi.ItemName,
+                CombatItemDescription = ppi.ItemDescription,
+                CombatItemFlavorText = string.Empty,
+                Effects = ppi.Effects.Select(ie => MapItemEffect(ie)).ToArray(),
+            }).ToArray();
+
+            CombatEncounterContext combatCtx = new CombatEncounterContext()
+            {
+                Combatants = combatantContexts,
+                PlayerPartyCombatItems = combatItems,
+            };
+
+            return combatCtx;
+        }
+
+        private CombatEffect MapItemEffect(ItemEffect itemEffect)
+        {
+            return new CombatEffect()
+            {
+                EffectedAttribute = itemEffect.EffectedAttribute,
+                EffectType = itemEffect.EffectType,
+                Magnitude = itemEffect.Magnitude,
+                MagnitudeFactor = itemEffect.MagnitudeFactor,
+                ForwardEffect = itemEffect.ForwardEffect != null ? MapItemEffect(itemEffect.ForwardEffect) : null,
+            };
         }
     }
 }
