@@ -1,15 +1,13 @@
 ﻿using JMT.RPG.Campaign;
-using JMT.RPG.Combat;
+using JMT.RPG.Core.Contracts.Campaign;
 using JMT.RPG.Core.Contracts.Combat;
-using JMT.RPG.Core.Game;
 using JMT.RPG.Core.Game.Domain;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using CampaignEvent = JMT.RPG.Campaign.CampaignEvent;
+using CampaignEvent = JMT.RPG.Core.Contracts.Campaign.CampaignEvent;
+
 
 namespace JMT.RPG.Test.Campaign
 {
@@ -19,186 +17,143 @@ namespace JMT.RPG.Test.Campaign
         [TestMethod]
         public async Task CampaignTest()
         {
-            CampaignContext campaignCtx = new CampaignContext()
+            CampaignContext ctx = new CampaignContext()
             {
-                CampaignEvents = new CampaignEvent[]
-                {
-                    new CampaignEvent()
-                    {
-                        NumberOfLootRolls = 1,
-                        EventSequence = 1,
-                        IsCombatEvent = true,
-                        AwardedCurrency = 100,
-                        LootTable = new CampaignEventLootTable()
-                        {
-                            Loot = new CampaignLoot[]
-                            {
-                                new CampaignLoot()
-                                {
-                                    Key = 1,
-                                    CampaignPartyItems = new CampaignPartyItem[]
-                                    {
-                                        new CampaignPartyItem()
-                                        {
-                                            ItemID = "HEALTH_POTION",
-                                            ItemDescription = "RESTORES HEALTH",
-                                            ItemName = "HEALTH POTION",
-                                            Effects = new Effect[]
-                                            {
-                                                new Effect()
-                                                {
-                                                    EffectType = "NONE",
-                                                    Magnitude = 10,
-                                                    MagnitudeFactor = -1,
-                                                    EffectedAttribute = EffectedAttribute.HEALTH,
-                                                },
-                                            }
-                                        }
-                                    },
-
-                                },
-                                new CampaignLoot()
-                                {
-                                    Key = 2,
-                                    CampaignPartyItems = new CampaignPartyItem[]
-                                    {
-                                        new CampaignPartyItem()
-                                        {
-                                            ItemID = "HEALTH_POTION",
-                                            ItemDescription = "RESTORES HEALTH",
-                                            ItemName = "HEALTH POTION",
-                                            Effects = new Effect[]
-                                            {
-                                                new Effect()
-                                                {
-                                                    EffectType = "NONE",
-                                                    Magnitude = 10,
-                                                    MagnitudeFactor = -1,
-                                                    EffectedAttribute = EffectedAttribute.HEALTH,
-                                                },
-                                            }
-                                        }
-                                    },
-
-                                },
-                                new CampaignLoot()
-                                {
-                                    Key = 3,
-                                    CampaignPartyItems = new CampaignPartyItem[]
-                                    {
-                                        new CampaignPartyItem()
-                                        {
-                                            ItemID = "HEALTH_POTION",
-                                            ItemDescription = "RESTORES HEALTH",
-                                            ItemName = "HEALTH POTION",
-                                            Effects = new Effect[]
-                                            {
-                                                new Effect()
-                                                {
-                                                    EffectType = "NONE",
-                                                    Magnitude = 10,
-                                                    MagnitudeFactor = -1,
-                                                    EffectedAttribute = EffectedAttribute.HEALTH,
-                                                },
-                                            }
-                                        }
-                                    },
-
-                                }
-                            }
-                        }
-                    }
-                },
                 PlayerPartyCurrency = 0,
-                PlayerPartyItems = new List<CampaignPartyItem>(),
-            };
-
-
-            Combatant[] playerParty = new Combatant[]
-            {
-                new Combatant(
-                    new DummyCombatInputHandler("1", "2"),
-                    new CombatAbilityManager(new CombatAbility[]
+                PlayerParty = new CampaignCharacter[]
+                {
+                    new CampaignCharacter()
                     {
-                        new CombatAbility()
-                        {
-                            CombatAbilityId = "1",
-                            Name = "TEST ABILITY",
-                            Description = "TEST ABILITY",
-                            Cooldown = 0,
-                            RemainingCooldown = 0,
-                            Effects = new CombatEffect[]
-                            {
-                                new CombatEffect()
-                                {
-                                    EffectedAttribute = "HEALTH",
-                                    EffectType = EffectType.PHYSICAL,
-                                    Magnitude = 0,
-                                    MagnitudeFactor = -1,
-                                }
-                            }
-                        }
-                    }),
-                    new CombatantStateManager()
-                    {
+                        CampaignCharacterID = "PLAYER",
+                        Name = "PLAYER",
+                        Level = 1,
                         TotalHealth = 100,
                         RemainingHealth = 100,
                         Strength = 10,
                         Intellect = 10,
                         Speed = 10,
-                    })
-                {
-                    Id = "1",
-                    Name = "TEST PLAYER",
-                }
-            };
-
-            Combatant[] enemyParty = new Combatant[]
-            {
-                new Combatant(
-                    new DummyCombatInputHandler("2", "2"),
-                    new CombatAbilityManager(new CombatAbility[]
-                        {
-                            new CombatAbility()
-                            {
-                                CombatAbilityId = "2",
-                                Name = "TEST ABILITY",
-                                Description = "TEST ABILITY",
-                                Cooldown = 0,
-                                RemainingCooldown = 0,
-                                Effects = new CombatEffect[]
-                                {
-                                    new CombatEffect()
-                                    {
-                                        EffectedAttribute = EffectedAttribute.HEALTH,
-                                        EffectType = EffectType.PHYSICAL,
-                                        MagnitudeFactor = -1,
-                                        Magnitude = 1,
-                                    }
-                                }
-                            }
-                        }),
-                    new CombatantStateManager()
-                    {
-                        Speed = 1,
-                        Strength = 1,
-                        Intellect = 1,
-                        TotalHealth = 50,
-                        RemainingHealth= 50,
+                        CombatAbilities = Array.Empty<CombatAbility>(),
                     }
-                )
+                },
+                PlayerPartyItems = new CampaignPartyItem[]
                 {
-                        Id = "2",
-                        Name = "TEST ENEMY",
-
+                    new CampaignPartyItem()
+                    {
+                        ItemID = "HEALTH_POTION",
+                        ItemName = "HEALTH POTION",
+                        ItemDescription = "HEALS 10 HP",
+                        Effects = new ItemEffect[]
+                        {
+                            new ItemEffect()
+                            {
+                                EffectedAttribute = "HEALTH",
+                                EffectType = "ITEM",
+                                Magnitude = 10,
+                                MagnitudeFactor = 1,
+                            }
+                        }
+                    }
+                },
+                CampaignEvents = new CampaignEvent[]
+                {
+                    new CampaignEvent()
+                    {
+                        EventSequence = 1,
+                        IsCombatEvent = true,
+                        LootTable = null,
+                        NumberOfLootRolls = 1,
+                        AwardedCurrency = 100,
+                        CampaignDialog = new CampaignEventDialog[]
+                        {
+                            new CampaignEventDialog()
+                            {
+                                Dialog = "TEST",
+                                DialogSequence = 1,
+                            },
+                            new CampaignEventDialog()
+                            {
+                                Dialog = "TEST 2",
+                                DialogSequence = 2,                             
+                            }
+                        },
+                        EnemyParty = new CampaignCharacter[]
+                        {
+                            new CampaignCharacter()
+                            {
+                                CampaignCharacterID = "ENEMY",
+                                Name = "ENEMY",
+                                Level = 1,
+                                TotalHealth = 50,
+                                RemainingHealth = 50,
+                                Strength = 10,
+                                Intellect = 10,
+                                Speed = 10,
+                                CombatAbilities = Array.Empty<CombatAbility>(),
+                            }
+                        },
+                    }
                 }
             };
 
-            CombatManager combatMgr = new CombatManager(playerParty, enemyParty);
+            ICombatManager combatMgr = new DummyCombatManager(new CombatResult()
+            {
+                FinalTurnNum = 10,
+                PlayerPartyWon = true,
+                RemainingPlayerPartyCombatItems = new CombatItem[]
+                {
+                    new CombatItem()
+                    {
+                        CombatItemID = "HEALTH_POTION",
+                        CombatItemName = "HEALTH POTION",
+                        CombatItemDescription = "HEALS 10 HP",
+                        Effects = new CombatEffect[]
+                        {
+                            new CombatEffect()
+                            {
+                                EffectedAttribute = "HEALTH",
+                                EffectType = "ITEM",
+                                Magnitude = 10,
+                                MagnitudeFactor = 1,
+                            }
+                        }
+                    }
+                },
+                PlayerPartyCombatants = new CombatantContext[]
+                {
+                    new CombatantContext()
+                    {
+                        CombatantID = "PLAYER",
+                        Name = "PLAYER",
+                        Level = 1,
+                        TotalHealth = 100,
+                        RemainingHealth = 50,
+                        Strength = 10,
+                        Intellect = 10,
+                        Speed = 10,
+                        CombatAbilities = Array.Empty<CombatAbility>(),
+                    }
+                }
+            });
 
-            CampaignManager campaignMgr = new CampaignManager(combatMgr, new DummyCampaignInputHandler(), new CampaignLootManager());
-            CampaignResult result = await campaignMgr.PerformCampaign(campaignCtx);
+            ICampaignInputHandler inputHandler = new DummyCampaignInputHandler();
+            ICampaignLootManager lootMgr = new DummyLootManager(new CampaignPartyItem[]
+            {
+                new CampaignPartyItem()
+                {
+                    ItemID = "ITEM_FIREBOMB",
+                    ItemName = "FIRE BOMB",
+                    ItemDescription = "BOOM GOES THE DYNAMITE",
+                    Effects = Array.Empty<ItemEffect>(),
+                }
+            });
+
+            ICampaignManager campMgr = new CampaignManager(combatMgr, inputHandler, lootMgr);
+            CampaignResult result = await campMgr.PerformCampaign(ctx);
+            
             Assert.IsNotNull(result);
+            Assert.IsTrue(result.CampaignCompleted);
+            Assert.AreEqual(100, result.PlayerPartyCurrency);
+            Assert.AreEqual(2, result.PlayerPartyItems.Count());
         }
     }
 }

@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace JMT.RPG.Core.Contracts.Combat
 {
-    public class CombatAbility
+    public record CombatAbility
     {
-        public string CombatAbilityId { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public int Cooldown { get; set; }
-        public int RemainingCooldown { get; set; }                
-        public IEnumerable<CombatEffect> Effects { get; set; }
+        public string CombatAbilityID { get; init; }
+        public string Name { get; init; }
+        public string Description { get; init; }
+        public int Cooldown { get; init; }
+        public int RemainingCooldown { get; init; }                
+        public IEnumerable<CombatEffect> Effects { get; init; }
     }
 }

@@ -2,14 +2,15 @@
 {
     public record CombatantContext
     {
-        public string Id { get; set; }
-        public string Name { get; set; }
-        public int Level { get; set; }
-        public int TotalHealth { get; set; }
-        public int RemainingHealth { get; set; }
-        public int Intellect { get; set; }
-        public int Strength { get; set; }
-        public int Speed { get; set; }
-        public CombatAbility[] CombatAbilities { get; set; }
+        public string CombatantID { get; init; }
+        public string Name { get; init; }
+        public int Level { get; init; }
+        public int TotalHealth { get; init; }
+        public int RemainingHealth { get; init; }
+        public int Intellect { get; init; }
+        public int Strength { get; init; }
+        public int Speed { get; init; }
+        public bool IsEnemyCombatant { get; init; }
+        public IEnumerable<CombatAbility> CombatAbilities { get; init; }
     }
 }

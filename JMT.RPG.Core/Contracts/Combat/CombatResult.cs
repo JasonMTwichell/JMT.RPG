@@ -2,7 +2,9 @@
 {
     public record CombatResult
     {
-        public int FinalTurn { get; set; }
-        public bool PlayerPartyWon { get; set; }
+        public int FinalTurnNum { get; init; }
+        public bool PlayerPartyWon { get; init; }
+        public IEnumerable<CombatantContext>? PlayerPartyCombatants { get; init; }
+        public IEnumerable<CombatItem> RemainingPlayerPartyCombatItems { get; init; }
     }
 }

@@ -8,6 +8,6 @@ namespace JMT.RPG.Core.Contracts.Combat
 {
     public interface ICombatManager
     {
-        Task<CombatResult> PerformCombat();
+        Task<CombatResult> PerformCombat(CombatEncounterContext combatEncounterCtx);
     }
 }

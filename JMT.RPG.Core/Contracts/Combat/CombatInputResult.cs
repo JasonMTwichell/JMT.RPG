@@ -2,7 +2,9 @@
 {
     public record CombatInputResult
     {
-        public string TargetId { get; set; }
-        public string ChosenAbilityId { get; set; }
+        public string CombatantID { get; init; }
+        public string TargetID { get; init; }
+        public string ChosenAbilityID { get; init; }
+        public string ChoseItemID { get; set; }
     }
 }

@@ -1,7 +1,7 @@
 ﻿namespace JMT.RPG.Core.Contracts.Campaign
 {
-    public class CampaignInputContext
+    public record CampaignInputContext
     {
-        public string Dialog { get; set; }
+        public string Dialog { get; init; }
     }
 }

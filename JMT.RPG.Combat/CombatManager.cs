@@ -1,114 +1,206 @@
-﻿using JMT.RPG.Core.Contracts.Combat;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using JMT.RPG.Combat.Ability;
+using JMT.RPG.Combat.Combatants;
+using JMT.RPG.Combat.Effect;
+using JMT.RPG.Core.Contracts.Combat;
 
 namespace JMT.RPG.Combat
 {
     public class CombatManager: ICombatManager
     {
-        private IEnumerable<ICombatant> _playerParty;
-        private IEnumerable<ICombatant> _enemyParty;
-        private IEnumerable<ICombatant> _combatants { 
-            get
-            {
-                return _playerParty.Concat(_enemyParty);
-            }
+        ICombatInputHandler _inputHandler;
+        ICombatAbilityManager _abilityMgr;
+        IResolvedEffectManager _effMgr;
+        public CombatManager(ICombatInputHandler inputHandler, ICombatAbilityManager abilityMgr, IResolvedEffectManager effMgr)
+        {
+            _inputHandler = inputHandler;
+            _abilityMgr = abilityMgr;
+            _effMgr = effMgr;
         }
 
-        public CombatManager(IEnumerable<ICombatant> playerParty, IEnumerable<ICombatant> enemyParty)
+        public async Task<CombatResult> PerformCombat(CombatEncounterContext combatEncounterCtx)
         {
-            _playerParty = playerParty;
-            _enemyParty = enemyParty;
-        }
+            // track items
+            List<CombatItem> playerCombatItems = combatEncounterCtx.PlayerPartyCombatItems.ToList();
+            // map to combat classes
+            Combatant[] combatants = combatEncounterCtx.Combatants.Select(ctx => MapCombatantContext(ctx))
+                                                                  .OrderByDescending(c => c.Speed)
+                                                                  .ToArray();
 
-        public async Task<CombatResult> PerformCombat()
-        {
-            bool combatConcluded = false;
             int turnNumber = 0;
+            bool combatConcluded = false;
 
-            while(!combatConcluded)
+            while (!combatConcluded)
             {
                 // start of turn phase
-                StartOfTurnPhase();
-
-                ICombatant[] speedSortedCombatants = _combatants.OrderByDescending(c => c.Speed).ToArray();
+                StartOfTurnPhase(combatants);
 
                 // each combatant takes their turn selecting and applying their action
-                foreach (Combatant combatant in speedSortedCombatants)
+                foreach (Combatant combatant in combatants)
                 {
-                    // effects after being run through bonuses and triggers
-                    CombatContext combatState = GetCombatContext(turnNumber);
-                    IEnumerable<ResolvedEffect> resolvedEffects = await combatant.ChooseCombatAbility(combatState);
-
-                    // distribute them to their targets
-                    foreach(Combatant targetedCombatant in _combatants)
+                    CombatInputResult combatantInput = await _inputHandler.GetInput(new CombatInputContext()
                     {
-                        ResolvedEffect[] targetingEffects = resolvedEffects.ToArray().Where(e => e.TargetID == targetedCombatant.Id).ToArray();
-                        targetedCombatant.ApplyEffects(targetingEffects);
+                        CombatantID = combatant.CombatantID,
+                        TurnNumber = turnNumber,
+                        CombatantContexts = combatants.Select(c => c.GetCombatantBattleContext()).Select(c => new CombatantContext()
+                        {
+                            CombatantID = c.CombatantID,
+                            Name = c.Name,
+                            IsEnemyCombatant = c.IsEnemyCombatant,
+                            Level = c.Level,
+                            TotalHealth = c.CombatantState.TotalHealth,
+                            RemainingHealth = c.CombatantState.RemainingHealth,
+                            Strength = c.CombatantState.Strength,
+                            Intellect = c.CombatantState.Intellect,
+                            Speed = c.CombatantState.Speed,
+                            CombatAbilities = c.CombatAbilities.ToArray(),
+                        }).ToArray(),
+                    });
+
+                    // resolve the ability and apply cooldown
+                    ResolvedEffect[] resolvedEffects = Array.Empty<ResolvedEffect>();
+                    if(!string.IsNullOrEmpty(combatantInput.ChoseItemID))
+                    {
+                        CombatItem chosenItem = playerCombatItems.FirstOrDefault(ci => ci.CombatItemID == combatantInput.ChoseItemID);
+
+                        // map to a combat ability for the mgr to resolve
+                        CombatAbilityResolutionContext abilityResCtx = new CombatAbilityResolutionContext()
+                        {
+                            TargetID = combatantInput.TargetID,
+                            Strength = combatant.Strength,
+                            Intellect = combatant.Intellect,
+                            Speed = combatant.Speed,
+                            CombatAbility = new CombatAbility()
+                            {
+                                CombatAbilityID = "ITEM",
+                                Cooldown = 0,
+                                RemainingCooldown = 0,
+                                Description = chosenItem.CombatItemDescription,
+                                Name = chosenItem.CombatItemName,
+                                Effects = chosenItem.Effects,
+                            },
+                        };
+
+                        resolvedEffects = _abilityMgr.ResolveCombatAbility(abilityResCtx).ToArray();
+
+                        // remove item from list of available options
+                        playerCombatItems.Remove(chosenItem);
+                    }
+                    else if (!string.IsNullOrEmpty(combatantInput.ChosenAbilityID))
+                    {
+                        CombatAbility chosenAbility = combatant.CombatAbilities.First(c => c.CombatAbilityID == combatantInput.ChosenAbilityID);
+                        CombatAbilityResolutionContext abilityResCtx = new CombatAbilityResolutionContext()
+                        {
+                            TargetID = combatantInput.TargetID,
+                            Strength = combatant.Strength,
+                            Intellect = combatant.Intellect,
+                            Speed = combatant.Speed,
+                            CombatAbility = chosenAbility,
+                        };
+
+                        resolvedEffects = _abilityMgr.ResolveCombatAbility(abilityResCtx).ToArray();
+                        chosenAbility = _abilityMgr.ApplyCooldown(chosenAbility, chosenAbility.Cooldown);
+                        combatant.CombatAbilities.RemoveAll(ca => ca.CombatAbilityID == chosenAbility.CombatAbilityID);
+                        combatant.CombatAbilities.Add(chosenAbility);
                     }
 
-                    ActionResolutionPhase();
+                    // distribute them to their targets
+                    foreach (Combatant targetedCombatant in combatants)
+                    {
+                        ResolvedEffect[] targetingEffects = resolvedEffects.Where(e => e.TargetID == targetedCombatant.CombatantID)?.ToArray();
+                        CombatantBattleContext ctx = _effMgr.ApplyEffects(targetedCombatant.GetCombatantBattleContext(), targetingEffects);
+                        targetedCombatant.ApplyCombatantBattleContext(ctx);
+                    }
+
+                    ActionResolutionPhase(combatants);
 
                     // check if combat is concluded
-                    combatConcluded = CheckCombatConcluded();
-                    if(combatConcluded) break; 
+                    combatConcluded = CheckCombatConcluded(combatants);
+                    if (combatConcluded) break;
                 }
 
-                EndOfTurnPhase();
+                EndOfTurnPhase(combatants);
                 turnNumber += 1;
             }
 
             CombatResult combatResult = new CombatResult()
             {
-                FinalTurn = turnNumber,
-                PlayerPartyWon = _enemyParty.All(ec => ec.RemainingHealth <= 0) && _playerParty.Any(ec => ec.RemainingHealth >= 0)
+                FinalTurnNum = turnNumber,
+                PlayerPartyWon = combatants.Where(c => c.IsEnemyCombatant).All(ec => ec.RemainingHealth <= 0)
+                                    &&
+                                 combatants.Where(c => !c.IsEnemyCombatant).Any(ec => ec.RemainingHealth >= 0),
+                PlayerPartyCombatants = combatants.Select(c => MapToCombatContext(c)).ToArray(),
+                RemainingPlayerPartyCombatItems = playerCombatItems,
             };
 
             return combatResult;
         }
 
-        private void ActionResolutionPhase()
+        private CombatantContext MapToCombatContext(Combatant ctx)
         {
-            foreach (Combatant combatant in _combatants)
+            return new CombatantContext()
             {
-                combatant.ActionResolutionPhase();
-            }
-        }
-
-        private void StartOfTurnPhase()
-        {
-            foreach(Combatant combatant in _combatants)
-            {
-                combatant.StartOfTurnPhase();
-            }
-        }
-
-        private void EndOfTurnPhase()
-        {
-            foreach (Combatant combatant in _combatants)
-            {
-                combatant.EndOfTurnPhase();
-            }
-        }
-
-        private CombatContext GetCombatContext(int turnNumber)
-        {
-            CombatContext combatState = new CombatContext()
-            {
-                CombatantContexts = _combatants.Select(c => c.GetCombatantContext()).ToArray(),
-                TurnNumber = turnNumber,
+                CombatantID = ctx.CombatantID,
+                Name = ctx.Name,
+                Level = ctx.Level,
+                IsEnemyCombatant = ctx.IsEnemyCombatant,
+                TotalHealth = ctx.TotalHealth,
+                RemainingHealth = ctx.RemainingHealth,
+                Strength = ctx.Strength,
+                Intellect = ctx.Intellect,
+                Speed = ctx.Speed,
+                CombatAbilities = ctx.CombatAbilities,                
             };
-
-            return combatState;
         }
 
-        
-        private bool CheckCombatConcluded()
+        private Combatant MapCombatantContext(CombatantContext ctx)
         {
-            return _enemyParty.All(ec => ec.RemainingHealth <= 0) || _playerParty.All(ec => ec.RemainingHealth <= 0);
+            return new Combatant()
+            {
+                CombatantID = ctx.CombatantID,
+                Name = ctx.Name,
+                Level = ctx.Level,
+                IsEnemyCombatant = ctx.IsEnemyCombatant,
+                TotalHealth = ctx.TotalHealth,
+                RemainingHealth = ctx.RemainingHealth,
+                Strength = ctx.Strength,
+                Intellect = ctx.Intellect,
+                Speed = ctx.Speed,
+                CombatAbilities = ctx.CombatAbilities.ToList(),
+                AppliedEffects = new List<ResolvedEffect>(),
+                CarryForwardEffects = new List<ResolvedEffect>(),
+            };
+        }
+
+        private void StartOfTurnPhase(IEnumerable<Combatant> combatants)
+        {
+            foreach(Combatant combatant in combatants)
+            {
+                CombatantBattleContext ctx = _effMgr.ResolveAppliedEffects(combatant.GetCombatantBattleContext());
+                combatant.ApplyCombatantBattleContext(ctx);
+            }
+        }
+
+        private void ActionResolutionPhase(IEnumerable<Combatant> combatants)
+        {
+            foreach (Combatant combatant in combatants)
+            {
+                CombatantBattleContext ctx = _effMgr.ResolveAppliedEffects(combatant.GetCombatantBattleContext());
+                combatant.ApplyCombatantBattleContext(ctx);
+            }
+        }
+
+        private void EndOfTurnPhase(IEnumerable<Combatant> combatants)
+        {
+            foreach (Combatant combatant in combatants)
+            {
+                CombatantBattleContext ctx = _effMgr.CarryForwardEffects(combatant.GetCombatantBattleContext());
+                combatant.ApplyCombatantBattleContext(ctx);
+            }
+        }
+        
+        private bool CheckCombatConcluded(IEnumerable<Combatant> combatants)
+        {
+            return (combatants.Where(c => c.IsEnemyCombatant).All(ec => ec.RemainingHealth <= 0) || combatants.Where(c => !c.IsEnemyCombatant).All(ec => ec.RemainingHealth <= 0));
         }
     }
 }
