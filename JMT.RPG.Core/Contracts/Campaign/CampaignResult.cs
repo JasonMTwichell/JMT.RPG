@@ -1,9 +1,9 @@
 ﻿namespace JMT.RPG.Core.Contracts.Campaign
 {
-    public class CampaignResult
+    public record CampaignResult
     {
-        public bool CampaignCompleted { get; set; }
-        public int PlayerPartyCurrency { get; set; }
-        public List<CampaignPartyItem> PlayerPartyItems { get; set; }
+        public bool CampaignCompleted { get; init; }
+        public int PlayerPartyCurrency { get; init; }
+        public List<CampaignPartyItem> PlayerPartyItems { get; init; }
     }
 }
