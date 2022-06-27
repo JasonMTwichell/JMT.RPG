@@ -4,7 +4,7 @@ namespace JMT.RPG.Core.Contracts.Campaign
 {
     public class CampaignCharacter
     {
-        public string Id { get; init; }
+        public string CampaignCharacterID { get; init; }
         public string Name { get; init; }   
         public int Level { get; init; }
         public int TotalHealth { get; set; }

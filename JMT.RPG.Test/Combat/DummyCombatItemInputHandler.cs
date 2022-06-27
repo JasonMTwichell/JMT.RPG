@@ -1,7 +1,7 @@
 ﻿using JMT.RPG.Core.Contracts.Combat;
 using System.Threading.Tasks;
 
-namespace JMT.RPG.Test
+namespace JMT.RPG.Test.Combat
 {
     internal class DummyCombatItemInputHandler : ICombatInputHandler
     {

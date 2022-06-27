@@ -7,6 +7,6 @@ namespace JMT.RPG.Core.Contracts.Campaign
         public int PlayerPartyCurrency { get; init; }
         public IEnumerable<CampaignCharacter> PlayerParty { get; set; }
         public IEnumerable<CampaignEvent> CampaignEvents { get; init; }
-        public List<CampaignPartyItem> PlayerPartyItems { get; init; }
+        public IEnumerable<CampaignPartyItem> PlayerPartyItems { get; init; }
     }
 }

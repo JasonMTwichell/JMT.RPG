@@ -10,6 +10,6 @@ namespace JMT.RPG.Core.Contracts.Campaign
         public int AwardedCurrency { get; init; }
         public IEnumerable<CampaignCharacter> EnemyParty { get; init; }
         public CampaignEventLootTable? LootTable { get; init; }
-        public IEnumerable<CampaignDialog> CampaignDialog { get; init; }        
+        public IEnumerable<CampaignEventDialog> CampaignDialog { get; init; }        
     }
 }

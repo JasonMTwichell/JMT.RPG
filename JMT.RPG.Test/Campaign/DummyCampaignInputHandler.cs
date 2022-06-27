@@ -5,14 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using JMT.RPG.Core.Contracts.Campaign;
 
-namespace JMT.RPG.Test
+namespace JMT.RPG.Test.Campaign
 {
     internal class DummyCampaignInputHandler : ICampaignInputHandler
     {
         public async Task<CampaignInputResult> GetInput(CampaignInputContext ctx)
         {
-            Console.WriteLine(ctx.Dialog);
-
             return new CampaignInputResult();
         }
     }
