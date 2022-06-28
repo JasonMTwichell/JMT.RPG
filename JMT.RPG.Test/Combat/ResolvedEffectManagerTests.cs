@@ -1,7 +1,7 @@
 ﻿using JMT.RPG.Combat.Ability;
 using JMT.RPG.Combat.Combatants;
 using JMT.RPG.Combat.Effect;
-using JMT.RPG.Core.Contracts.Combat;
+using JMT.RPG.Core.Combat;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;

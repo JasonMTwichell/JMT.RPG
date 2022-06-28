@@ -1,5 +1,5 @@
 ﻿using JMT.RPG.Campaign;
-using JMT.RPG.Core.Contracts.Campaign;
+using JMT.RPG.Core.Campaign;
 using System.Collections.Generic;
 
 namespace JMT.RPG.Test.Campaign

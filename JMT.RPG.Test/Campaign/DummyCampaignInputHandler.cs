@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using JMT.RPG.Core.Contracts.Campaign;
+using JMT.RPG.Core.Campaign;
 
 namespace JMT.RPG.Test.Campaign
 {

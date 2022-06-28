@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using JMT.RPG.Combat;
-using JMT.RPG.Core.Contracts.Combat;
+using JMT.RPG.Core.Combat;
 
 namespace JMT.RPG.Combat
 {

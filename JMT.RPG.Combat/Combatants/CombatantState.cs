@@ -1,6 +1,4 @@
-﻿using JMT.RPG.Core.Contracts.Combat;
-
-namespace JMT.RPG.Combat.Combatants
+﻿namespace JMT.RPG.Combat.Combatants
 {
     public record CombatantState
     {

@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using JMT.RPG.Combat;
 using JMT.RPG.Combat.Ability;
 using JMT.RPG.Combat.Effect;
-using JMT.RPG.Core.Contracts.Combat;
+using JMT.RPG.Core.Combat;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace JMT.RPG.Test.Combat

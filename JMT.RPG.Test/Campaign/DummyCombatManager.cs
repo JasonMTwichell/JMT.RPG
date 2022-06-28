@@ -1,4 +1,4 @@
-﻿using JMT.RPG.Core.Contracts.Combat;
+﻿using JMT.RPG.Core.Combat;
 using System;
 using System.Collections.Generic;
 using System.Linq;
