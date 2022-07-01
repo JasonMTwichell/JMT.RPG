@@ -8,6 +8,6 @@ namespace JMT.RPG.Core.CharacterManagement
 {
     public interface ICharacterSkillManager
     {
-        UnlockCharacterSkillResult UnlockCharacterSkill(UnlockCharacterSkillContext ctx);
+        Task<UnlockCharacterSkillResult> UnlockCharacterSkill(UnlockCharacterSkillContext ctx);
     }
 }

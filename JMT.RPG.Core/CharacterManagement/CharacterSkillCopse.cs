@@ -2,6 +2,7 @@
 {
     public record CharacterSkillCopse
     {
+        public string CharacterID { get; init; }
         public IEnumerable<CharacterSkillTree> SkillTrees { get; set; }
     }
 }

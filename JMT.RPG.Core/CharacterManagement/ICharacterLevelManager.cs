@@ -8,6 +8,6 @@ namespace JMT.RPG.Core.CharacterManagement
 {
     public interface ICharacterLevelManager
     {
-        CharacterLevelUpResult PerformLevelUp(CharacterLevelUpContext ctx);
+        Task<CharacterLevelUpResult> PerformLevelUp(CharacterLevelUpContext ctx);
     }
 }

@@ -8,5 +8,6 @@
         public int Strength { get; init; }
         public int Intellect { get;init; }
         public int Speed { get; init; }
+        public string CharacterID { get; set; }
     }
 }

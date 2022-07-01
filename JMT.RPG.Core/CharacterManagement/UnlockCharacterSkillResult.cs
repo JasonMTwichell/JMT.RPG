@@ -2,6 +2,8 @@
 {
     public record UnlockCharacterSkillResult
     {
-        public CharacterSkillCopse CharacterSkillCopse { get; init; }
+        public bool SkillWasPurchased { get; init; }
+        public int CurrencySpent { get; init; }
+        public CharacterSkill? LearnedSkill { get; init; }
     }
 }
