@@ -17,7 +17,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JMT.RPG.Repo", "JMT.RPG.Rep
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JTM.RPG.CharacterManagement", "JTM.RPG.CharacterManagement\JTM.RPG.CharacterManagement.csproj", "{C1E77DE9-D8EA-4DFF-BF42-CA344F1E4904}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JMT.RPG.CharacterManagement", "JMT.RPG.CharacterManagement\JMT.RPG.CharacterManagement.csproj", "{B6CD580A-BA36-4D8E-B3FB-0FC8BC22B8EB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JMT.RPG.CharacterManagement", "JMT.RPG.CharacterManagement\JMT.RPG.CharacterManagement.csproj", "{B6CD580A-BA36-4D8E-B3FB-0FC8BC22B8EB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JMT.RPG.GameManagement", "JMT.RPG.GameManagement\JMT.RPG.GameManagement.csproj", "{AA7C2129-1213-4DA0-B42C-348732CCC198}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -57,6 +59,10 @@ Global
 		{B6CD580A-BA36-4D8E-B3FB-0FC8BC22B8EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B6CD580A-BA36-4D8E-B3FB-0FC8BC22B8EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B6CD580A-BA36-4D8E-B3FB-0FC8BC22B8EB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AA7C2129-1213-4DA0-B42C-348732CCC198}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AA7C2129-1213-4DA0-B42C-348732CCC198}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AA7C2129-1213-4DA0-B42C-348732CCC198}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AA7C2129-1213-4DA0-B42C-348732CCC198}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

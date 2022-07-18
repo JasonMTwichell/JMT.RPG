@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace JMT.RPG.Core.GameManagement
 {
-    public class GameState
+    public interface IGameLoopManager
     {
-        public int Currency { get; set; }
-        public ICollection<Item> Items { get; set; }
+        Task<GameLoopResult> PerformGameLoop(GameLoopContext context);
     }
 }
