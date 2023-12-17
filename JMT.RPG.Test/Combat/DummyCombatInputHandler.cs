@@ -1,4 +1,4 @@
-﻿using JMT.RPG.Core.Contracts.Combat;
+﻿using JMT.RPG.Core.Combat;
 using System.Threading.Tasks;
 
 namespace JMT.RPG.Test.Combat

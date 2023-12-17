@@ -1,5 +1,5 @@
 ﻿using JMT.RPG.Combat.Effect;
-using JMT.RPG.Core.Contracts.Combat;
+using JMT.RPG.Core.Combat;
 
 namespace JMT.RPG.Combat.Combatants
 {

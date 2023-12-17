@@ -1,7 +1,7 @@
 ﻿using JMT.RPG.Combat.Ability;
 using JMT.RPG.Combat.Combatants;
 using JMT.RPG.Combat.Effect;
-using JMT.RPG.Core.Contracts.Combat;
+using JMT.RPG.Core.Combat;
 
 namespace JMT.RPG.Combat
 {
@@ -22,8 +22,7 @@ namespace JMT.RPG.Combat
             // track items
             List<CombatItem> playerCombatItems = combatEncounterCtx.PlayerPartyCombatItems.ToList();
             // map to combat classes
-            Combatant[] combatants = combatEncounterCtx.Combatants.Select(ctx => MapCombatantContext(ctx))
-                                                                  .OrderByDescending(c => c.Speed)
+            Combatant[] combatants = combatEncounterCtx.Combatants.Select(ctx => MapCombatantContext(ctx))                                                                  
                                                                   .ToArray();
 
             int turnNumber = 0;
@@ -35,7 +34,7 @@ namespace JMT.RPG.Combat
                 StartOfTurnPhase(combatants);
 
                 // each combatant takes their turn selecting and applying their action
-                foreach (Combatant combatant in combatants)
+                foreach (Combatant combatant in combatants.OrderByDescending(c => c.Speed))
                 {
                     CombatInputResult combatantInput = await _inputHandler.GetInput(new CombatInputContext()
                     {

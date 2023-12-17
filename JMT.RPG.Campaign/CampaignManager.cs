@@ -1,5 +1,5 @@
-﻿using JMT.RPG.Core.Contracts.Campaign;
-using JMT.RPG.Core.Contracts.Combat;
+﻿using JMT.RPG.Core.Campaign;
+using JMT.RPG.Core.Combat;
 
 namespace JMT.RPG.Campaign
 {

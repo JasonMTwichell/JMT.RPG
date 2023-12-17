@@ -1,4 +1,4 @@
-﻿using JMT.RPG.Core.Contracts.Combat;
+﻿using JMT.RPG.Core.Combat;
 
 namespace JMT.RPG.Combat.Ability
 {

@@ -1,12 +1,8 @@
-﻿using JMT.RPG.Campaign;
-using JMT.RPG.Core.Contracts.Campaign;
-using JMT.RPG.Core.Game.Domain;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using System.Threading.Tasks;
+using JMT.RPG.Campaign;
+using JMT.RPG.Core.Campaign;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace JMT.RPG.Test.Campaign
 {

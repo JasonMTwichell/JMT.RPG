@@ -1,4 +1,4 @@
-﻿using JMT.RPG.Core.Contracts.Campaign;
+﻿using JMT.RPG.Core.Campaign;
 
 namespace JMT.RPG.Campaign
 {

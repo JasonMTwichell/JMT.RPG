@@ -1,12 +1,11 @@
-﻿using JMT.RPG.Campaign;
-using JMT.RPG.Core.Contracts.Campaign;
-using JMT.RPG.Core.Contracts.Combat;
-using JMT.RPG.Core.Game.Domain;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using CampaignEvent = JMT.RPG.Core.Contracts.Campaign.CampaignEvent;
+using JMT.RPG.Campaign;
+using JMT.RPG.Core.Campaign;
+using JMT.RPG.Core.Combat;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using CampaignEvent = JMT.RPG.Core.Campaign.CampaignEvent;
 
 
 namespace JMT.RPG.Test.Campaign
